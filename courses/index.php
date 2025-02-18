@@ -593,9 +593,9 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
                                             <td><?= $aa["credit_hours"] ?></td>
                                             <td><?= $aa["semester"] ?></td>
                                             <td><?= $aa["level"] ?></td>
-                                            <td><a href="department-info.php?d=<?= $aa["department_id"] ?>"><?= $aa["department_name"] ?></a></td>
+                                            <td><a href="departments/info.php?d=<?= $aa["department_id"] ?>"><?= $aa["department_name"] ?></a></td>
                                             <td>
-                                                <a href="course-info.php?c=<?= $aa["code"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
+                                                <a href="courses/info.php?c=<?= $aa["code"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
                                                 <button id="<?= $aa["code"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>
                                                 <button id="<?= $aa["code"] ?>" class="btn btn-danger btn-xs delete-btn">Delete</button>
                                             </td>

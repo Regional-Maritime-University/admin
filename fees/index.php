@@ -400,7 +400,7 @@ require_once('../inc/page-data.php');
             gap: 20px;
         }
 
-        /* Modal Styles */
+        /* Modal Base Styles */
         .modal {
             display: none;
             position: fixed;
@@ -419,32 +419,221 @@ require_once('../inc/page-data.php');
             display: flex;
         }
 
+        /* Modal Dialog - Container for modal content */
+        .modal-dialog {
+            position: relative;
+            width: 100%;
+            margin: 1.75rem auto;
+            pointer-events: none;
+        }
+
+        /* Modal Content */
         .modal-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            pointer-events: auto;
             background-color: white;
             border-radius: 10px;
-            width: 100%;
-            max-width: 500px;
             padding: 30px;
-            position: relative;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 0 20px;
         }
 
-        .modal-content h2 {
-            margin-bottom: 20px;
-            color: var(--primary-color);
-            text-align: center;
+        /* Scrollable Modal */
+        .modal-dialog.modal-scrollable {
+            display: flex;
+            max-height: calc(100% - 3.5rem);
+            /* Account for margin */
         }
 
+        .modal-dialog.modal-scrollable .modal-content {
+            max-height: 100%;
+            overflow: hidden;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body {
+            overflow-y: auto;
+            /* Custom scrollbar styling */
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) #f1f1f1;
+        }
+
+        /* Custom scrollbar for webkit browsers */
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* Modal Sizes */
+        /* Default size */
+        .modal-dialog {
+            max-width: 500px;
+        }
+
+        /* Small modal */
+        .modal-dialog.modal-sm {
+            max-width: 300px;
+        }
+
+        /* Large modal */
+        .modal-dialog.modal-lg {
+            max-width: 800px;
+        }
+
+        /* Extra large modal */
+        .modal-dialog.modal-xl {
+            max-width: 1140px;
+        }
+
+        /* Fullscreen Modal Variations */
+        .modal-dialog.modal-fullscreen {
+            width: 100vw;
+            max-width: none;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .modal-dialog.modal-fullscreen .modal-content {
+            height: 100%;
+            border: 0;
+            border-radius: 0;
+        }
+
+        /* Responsive Fullscreen Variations */
+        @media (max-width: 576px) {
+            .modal-dialog.modal-fullscreen-sm-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-sm-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .modal-dialog.modal-fullscreen-md-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-md-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .modal-dialog.modal-fullscreen-lg-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-lg-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .modal-dialog.modal-fullscreen-xl-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-xl-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .modal-dialog.modal-fullscreen-xxl-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-xxl-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        /* Modal Header */
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        /* Modal Body */
+        .modal-body {
+            position: relative;
+            flex: 1 1 auto;
+            padding: 1rem 0;
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 1rem;
+            border-top: 1px solid #dee2e6;
+        }
+
+        /* Close Button */
         .close-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 1.5rem;
+            right: 1.5rem;
             background: none;
             border: none;
-            font-size: 24px;
-            cursor: pointer;
+            font-size: 1.5rem;
+            line-height: 1;
             color: var(--danger-color);
+            cursor: pointer;
+            padding: 0.5rem;
         }
+
+        .close-btn:hover {
+            opacity: 0.75;
+        }
+
+        /* Modal Styles */
 
         .form-group {
             margin-bottom: 15px;
@@ -473,12 +662,6 @@ require_once('../inc/page-data.php');
             display: flex;
             align-items: center;
             gap: 5px;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
         }
 
         .cancel-btn,
@@ -525,6 +708,128 @@ require_once('../inc/page-data.php');
         select.transform-text,
         textarea.transform-text {
             text-transform: uppercase !important;
+        }
+
+        /**
+        Fee structure and Items
+         */
+        .fee-structure-form {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+
+        .fee-items-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .no-items-message {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            color: #666;
+        }
+
+        .no-items-message i {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .fee-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 40px;
+            gap: 15px;
+            align-items: start;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .fee-item:hover {
+            background-color: #f1f3f5;
+        }
+
+        .fee-item select,
+        .fee-item input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .fee-item input:focus,
+        .fee-item select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .remove-item-btn {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+
+        .remove-item-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .add-fee-item-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .add-fee-item-btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        .amount-field {
+            position: relative;
+        }
+
+        .amount-field::before {
+            content: "GH₵";
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 14px;
+        }
+
+        .amount-field input {
+            padding-left: 35px;
+        }
+
+        @media (max-width: 768px) {
+            .fee-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .remove-item-btn {
+                justify-self: end;
+            }
         }
     </style>
     <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
@@ -582,20 +887,20 @@ require_once('../inc/page-data.php');
                                 $fee_structure_list = $fee_structure->fetch();
                                 if (!empty($fee_structure_list) && is_array($fee_structure_list)) {
                                     $index = 1;
-                                    foreach ($fee_structure_list as $aa) {
+                                    foreach ($fee_structure_list as $fs) {
                                 ?>
                                         <tr>
                                             <td><?= $index ?></td>
-                                            <td><?= $aa["name"] ?></td>
-                                            <td><?= $aa["type"] ?></td>
-                                            <td><?= $aa["category"] ?></td>
-                                            <td><?= $aa["member_amount"] ?></td>
-                                            <td><?= $aa["non_member_amount"] ?></td>
-                                            <td><a href="program-info.php?d=<?= $aa["program_id"] ?>"><?= $aa["program_name"] ?></a></td>
+                                            <td><?= $fs["name"] ?></td>
+                                            <td><?= $fs["type"] ?></td>
+                                            <td><?= $fs["category"] ?></td>
+                                            <td><?= $fs["member_amount"] ?></td>
+                                            <td><?= $fs["non_member_amount"] ?></td>
+                                            <td><a href="program/info.php?d=<?= $fs["program_id"] ?>"><?= $fs["program_name"] ?></a></td>
                                             <td>
-                                                <a href="fee_structure-info.php?c=<?= $aa["id"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
-                                                <button id="<?= $aa["id"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>
-                                                <button id="<?= $aa["id"] ?>" class="btn btn-danger btn-xs archive-btn">Archive</button>
+                                                <button id="<?= $fs["id"] ?>" class="btn btn-primary btn-xs view-btn">View</button>
+                                                <button id="<?= $fs["id"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>
+                                                <button id="<?= $fs["id"] ?>" class="btn btn-danger btn-xs archive-btn">Archive</button>
                                             </td>
                                         </tr>
                                 <?php
@@ -609,6 +914,40 @@ require_once('../inc/page-data.php');
                 </div>
             </div>
         </section>
+
+        <!-- Add New Staff Modal -->
+        <div class="modal" id="addFeeItemsModal" tabindex="-1" aria-labelledby="addFeeItemsModal" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-scrollable">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('addFeeItemsModal')">×</button>
+                    <h2>Add New Fee Structure</h2>
+                    <form id="addFeeItemsForm" method="POST" enctype="multipart/form-data">
+                        <div class="fee-structure-form">
+                            <div class="fee-items-container">
+                                <!-- No items message (shown when no items exist) -->
+                                <div class="no-items-message" id="noItemsMessage">
+                                    <i class="fas fa-info-circle"></i>
+                                    <p>No fee items added yet. Click the button below to add items.</p>
+                                </div>
+
+                                <!-- Container for fee items (initially empty) -->
+                                <div id="feeItemsList"></div>
+
+                                <!-- Add Item Button -->
+                                <button type="button" class="add-fee-item-btn" onclick="addFeeItem()">
+                                    <i class="fas fa-plus"></i> Add Fee Item
+                                </button>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="fee_structure" id="add-item-fee_structure">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('addFeeItemsModal')">Cancel</button>
+                            <button type="submit" class="btn btn-primary itemsFeeStructure-btn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
         <!-- Add New Staff Modal -->
         <div class="modal" id="addFeeStructureModal">
@@ -766,6 +1105,10 @@ require_once('../inc/page-data.php');
         }
 
         // Specific modal openers
+        function openaddFeeItemsModal() {
+            openModal('addFeeItemsModal');
+        }
+
         function openAddFeeStructureModal() {
             openModal('addFeeStructureModal');
         }
@@ -788,7 +1131,265 @@ require_once('../inc/page-data.php');
             $("#edit-non_member_amount").val(data.non_member_amount);
         }
 
+        function setFeeItemsFormData(data) {
+            $("#add-item-fee_structure").val(data);
+        }
+
+        // All available fee types
+        var ALL_FEE_TYPES = [{
+                value: 'Tuition',
+                label: 'Tuition'
+            },
+            {
+                value: 'Medicare/First Aid',
+                label: 'Medicare/First Aid'
+            },
+            {
+                value: 'Medical Examination',
+                label: 'Medical Examination'
+            },
+            {
+                value: 'Laboratory',
+                label: 'Laboratory'
+            },
+            {
+                value: 'SRC/Hall Dues',
+                label: 'SRC/Hall Dues'
+            },
+            {
+                value: 'Internet Access',
+                label: 'Internet Access'
+            },
+            {
+                value: 'Developement',
+                label: 'Developement'
+            },
+            {
+                value: 'Matriculation',
+                label: 'Matriculation'
+            },
+            {
+                value: 'Academic Facility Use',
+                label: 'Academic Facility Use'
+            },
+            {
+                value: 'Student Handbook',
+                label: 'Student Handbook'
+            },
+            {
+                value: 'Accommodation',
+                label: 'Accommodation'
+            },
+            {
+                value: 'Uniform',
+                label: 'Uniform'
+            },
+            {
+                value: 'Feeding 2 Meals',
+                label: 'Feeding 2 Meals'
+            },
+            {
+                value: 'Feeding 3 Meals',
+                label: 'Feeding 3 Meals'
+            },
+            {
+                value: 'Breakages & Maintenance',
+                label: 'Breakages & Maintenance'
+            }
+        ];
+
+        // Track selected fee types
+        let selectedFeeTypes = new Set();
+
+        // Counter for generating unique IDs
+        let itemCounter = 0;
+
+        // Function to get available fee types (excluding selected ones)
+        function getAvailableFeeTypes() {
+            return ALL_FEE_TYPES.filter(feeType => !selectedFeeTypes.has(feeType.value));
+        }
+
+        // Function to create fee type options HTML
+        function createFeeTypeOptions(selectedValue = '') {
+            const availableTypes = getAvailableFeeTypes();
+            let options = '<option value="">Select Fee Type</option>';
+
+            availableTypes.forEach(type => {
+                const selected = type.value === selectedValue ? 'selected' : '';
+                options += `<option value="${type.value}" ${selected}>${type.label}</option>`;
+            });
+
+            return options;
+        }
+
+        // Function to handle fee type selection change
+        function handleFeeTypeChange(select) {
+            const oldValue = select.dataset.previousValue;
+            const newValue = select.value;
+
+            // Remove old value from selected set if it exists
+            if (oldValue) {
+                selectedFeeTypes.delete(oldValue);
+            }
+
+            // Add new value to selected set if it's not empty
+            if (newValue) {
+                selectedFeeTypes.add(newValue);
+            }
+
+            // Store the new value as previous value
+            select.dataset.previousValue = newValue;
+
+            // Update all empty dropdowns
+            updateEmptyDropdowns();
+        }
+
+        // Function to update all empty fee type dropdowns
+        function updateEmptyDropdowns() {
+            const allSelects = document.querySelectorAll('.fee-item select[name="feeType"]');
+            allSelects.forEach(select => {
+                if (!select.value) {
+                    select.innerHTML = createFeeTypeOptions();
+                }
+            });
+        }
+
+        // Function to add a new fee item
+        function addFeeItem() {
+            const feeItemsList = document.getElementById('feeItemsList');
+            const noItemsMessage = document.getElementById('noItemsMessage');
+
+            // Hide the no items message
+            noItemsMessage.style.display = 'none';
+
+            // Create new fee item
+            const itemId = `feeItem${itemCounter++}`;
+            const feeItem = document.createElement('div');
+            feeItem.className = 'fee-item';
+            feeItem.id = itemId;
+
+            feeItem.innerHTML = `
+        <select name="feeType" required onchange="handleFeeTypeChange(this)">
+            ${createFeeTypeOptions()}
+        </select>
+        
+        <div class="amount-field">
+            <input type="number" 
+                   name="memberAmount" 
+                   placeholder="Member Amount" 
+                   step="0.01" 
+                   min="0" 
+                   required>
+        </div>
+        
+        <div class="amount-field">
+            <input type="number" 
+                   name="nonMemberAmount" 
+                   placeholder="Non-Member Amount" 
+                   step="0.01" 
+                   min="0" 
+                   required>
+        </div>
+        
+        <button type="button" 
+                class="remove-item-btn" 
+                onclick="removeFeeItem('${itemId}')">
+            <i class="fas fa-trash"></i>
+        </button>
+    `;
+
+            feeItemsList.appendChild(feeItem);
+            updateFeeItemsFormState();
+        }
+
+        // Function to remove a fee item
+        function removeFeeItem(itemId) {
+            const item = document.getElementById(itemId);
+            const select = item.querySelector('select[name="feeType"]');
+
+            // Remove the fee type from selected set
+            if (select.value) {
+                selectedFeeTypes.delete(select.value);
+            }
+
+            item.remove();
+            updateFeeItemsFormState();
+            updateEmptyDropdowns();
+        }
+
+        // Function to update form state
+        function updateFeeItemsFormState() {
+            const feeItemsList = document.getElementById('feeItemsList');
+            const noItemsMessage = document.getElementById('noItemsMessage');
+
+            // Show/hide no items message based on number of items
+            if (feeItemsList.children.length === 0) {
+                noItemsMessage.style.display = 'flex';
+                // Clear selected fee types when no items exist
+                selectedFeeTypes.clear();
+            } else {
+                noItemsMessage.style.display = 'none';
+            }
+        }
+
+        // Function to collect form data (call this when saving)
+        function collectFormData() {
+            const items = [];
+            const feeItems = document.querySelectorAll('.fee-item');
+
+            feeItems.forEach(item => {
+                items.push({
+                    name: item.querySelector('select[name="feeType"]').value,
+                    memberAmount: parseFloat(item.querySelector('input[name="memberAmount"]').value),
+                    nonMemberAmount: parseFloat(item.querySelector('input[name="nonMemberAmount"]').value)
+                });
+            });
+
+            return items;
+        }
+
+        // Initialize form state
+        document.addEventListener('DOMContentLoaded', updateFeeItemsFormState);
+
         $(document).ready(function() {
+            $("#addFeeItemsForm").on("submit", function(e) {
+
+                e.preventDefault();
+
+                // Create a new FormData object
+                var feeItems = collectFormData();
+                var feeStructure = document.querySelector('#add-item-fee_structure').value;
+                var formData = {
+                    "fee_structure": feeStructure,
+                    "items": feeItems
+                };
+
+                console.log(formData);
+
+                // Set up ajax request
+                $.ajax({
+                    type: 'POST',
+                    url: "../endpoint/add-fee-item",
+                    data: formData,
+                    success: function(result) {
+                        console.log(result);
+                        if (result.success) {
+                            alert(result.message);
+                            closeModal("addFeeStructureModal");
+                            location.reload();
+                        } else alert(result.message);
+                    },
+                    error: function() {
+                        alert('Error: Internal server error!');
+                    },
+                    ajaxStart: function() {
+                        $(".addFeeStructure-btn").prop("disabled", true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...');
+                    },
+                    ajaxStop: function() {
+                        $(".addFeeStructure-btn").prop("disabled", false).html('Upload');
+                    }
+                });
+            });
 
             $("#addFeeStructureForm").on("submit", function(e) {
 
@@ -854,6 +1455,45 @@ require_once('../inc/page-data.php');
                     },
                     ajaxStop: function() {
                         $(".editFeeStructure-btn").prop("disabled", false).html('Upload');
+                    }
+                });
+            });
+
+            $(document).on("click", ".view-btn", function(e) {
+                const fee_structure = $(this).attr('id');
+
+                const formData = {
+                    "fee_structure": fee_structure
+                };
+
+                setFeeItemsFormData(fee_structure);
+
+                $.ajax({
+                    type: "POST",
+                    url: "../endpoint/fetch-fee-item",
+                    data: formData,
+                    success: function(result) {
+                        console.log(result);
+                        if (result.success) {
+                            if (result.data) {
+                                updateFeeItemsFormState();
+                                openaddFeeItemsModal();
+                            } else {
+                                updateFeeItemsFormState();
+                                openaddFeeItemsModal();
+                            }
+                        } else {
+                            if (result.message == "logout") {
+                                alert('Your session expired. Please refresh the page to continue!');
+                                window.location.href = "?logout=true";
+                            } else {
+                                alert(result.message);
+                            }
+                        }
+                    },
+                    error: function(error) {
+                        console.log("error area: ", error);
+                        alert("An error occurred while processing your request.");
                     }
                 });
             });

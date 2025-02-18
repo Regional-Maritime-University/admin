@@ -556,7 +556,7 @@ require_once('../inc/page-data.php');
                                                     <td><?= $aa["stream"] ?></td>
                                                     <td><?= $aa["level"] ?></td>
                                                     <td>
-                                                        <a href="applicant-info.php?t=2&c=DEGREE&q=<?= $aa["app_login"] ?>"
+                                                        <a href="info.php?t=2&c=DEGREE&q=<?= $aa["app_login"] ?>"
                                                             class="btn btn-primary btn-xs view-btn">View</a>
                                                         <input class="form-check-input" type="checkbox"
                                                             name="app-login[]" value="<?= $aa["app_login"] ?>">

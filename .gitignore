@@ -1,7 +1,7 @@
 /vendor
-.env
-endpoint/.htaccess
 /assets
+endpoint/.htaccess
+downloads/*
 cacert.pem
 composer.lock
-downloads/*
+.env

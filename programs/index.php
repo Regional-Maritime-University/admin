@@ -586,9 +586,9 @@ require_once('../inc/page-data.php');
                                             <td><?= $aa["regular"] ? "YES" : "NO" ?></td>
                                             <td><?= $aa["weekend"] ? "YES" : "NO" ?></td>
                                             <td><?= $aa["duration"] . " " . $aa["dur_format"] ?></td>
-                                            <td><a href="department-info.php?d=<?= $aa["department_id"] ?>"><?= $aa["department_name"] ?></a></td>
+                                            <td><a href="department/info.php?d=<?= $aa["department_id"] ?>"><?= $aa["department_name"] ?></a></td>
                                             <td>
-                                                <a href="program-info.php?pg=<?= $aa["id"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
+                                                <a href="program/info.php?pg=<?= $aa["id"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
                                                 <button id="<?= $aa["id"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>
                                                 <button id="<?= $aa["id"] ?>" class="btn btn-danger btn-xs delete-btn">Delete</button>
                                             </td>

@@ -21,7 +21,7 @@ class FeeItem
     {
         switch ($key) {
             case 'fee':
-                $concat_stmt = "AND fi.`id` = :v";
+                $concat_stmt = "AND fs.`id` = :v";
                 break;
 
             default:
@@ -39,37 +39,44 @@ class FeeItem
 
     public function add(array $data)
     {
-        $selectQuery = "SELECT * FROM `fee_item` WHERE `fk_fee_structure` = :fs AND `name`=:n";
-        $feeItemData = $this->dm->getData(
-            $selectQuery,
-            array(
-                ":n" => $data["name"],
-                ":fs" => $data["fee_structure"]
-            )
-        );
+        $errors = [];
+        $success_count = 0;
+        $fee_structure_name = "";
 
-        if (!empty($feeItemData)) {
-            return array(
-                "success" => false,
-                "message" => "Fee item {$feeItemData[0]["name"]} with id {$feeItemData[0]["id"]} already exist in database!"
+        foreach ($data["items"] as $item) {
+            $selectQuery = "SELECT * FROM `fee_item` WHERE `fk_fee_structure` = :fs AND `name` LIKE :n";
+            $feeItemData = $this->dm->getData(
+                $selectQuery,
+                array(
+                    ":n" => "{$item["name"]}%",
+                    ":fs" => $data["fee_structure"]
+                )
             );
+            if (!empty($feeItemData)) {
+                array_push($errors, "Fee item {$feeItemData[0]["name"]} with id {$feeItemData[0]["id"]} already exist in database!");
+            } else {
+                $query = "INSERT INTO `fee_item` (`fk_fee_structure`, `name`, `member_amount`, `non_member_amount`) 
+                        VALUES(:f, :n, :m, :nm)";
+                $params = array(
+                    ":f" => $data["fee_structure"],
+                    ":n" => $item["name"],
+                    ":m" => $item["memberAmount"],
+                    ":nm" => $item["nonMemberAmount"]
+                );
+                $query_result = $this->dm->inputData($query, $params);
+                if ($query_result) {
+                    $this->log->activity($_SESSION["user"], "INSERT", "Added new fee item {$item["name"]}");
+                    $success_count++;
+                } else {
+                    array_push($errors, "Encounter a server error while adding fee item {$item["name"]} to database!");
+                }
+            }
         }
-
-        $query = "INSERT INTO `fee_item` (`fk_fee_structure`, `currency`, `name`, `member_amount`, `non_member_amount`) 
-                VALUES(:p, :t, :c, :n, :m, :nm)";
-        $params = array(
-            ":fs" => $data["fee_structure"],
-            ":n" => $data["name"],
-            ":c" => $data["currency"],
-            ":m" => $data["member_amount"],
-            ":nm" => $data["non_member_amount"]
+        return array(
+            "success" => true,
+            "message" => "{$success_count} fee items added!",
+            "errors" => $errors
         );
-        $query_result = $this->dm->inputData($query, $params);
-        if ($query_result) {
-            $this->log->activity($_SESSION["user"], "INSERT", "Added new fee item {$data["name"]}");
-            return array("success" => true, "message" => "New fee item successfully added!");
-        }
-        return array("success" => false, "message" => "Failed to add new fee item!");
     }
 
     public function update(array $data)

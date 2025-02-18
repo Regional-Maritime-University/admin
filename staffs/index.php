@@ -576,12 +576,12 @@ require_once('../inc/page-data.php');
                                 ?>
                                         <tr>
                                             <td><?= $index ?></td>
-                                            <td><a href="staff-info.php?s=<?= $aa["number"] ?>"><?= $aa["name"] ?></a></td>
+                                            <td><a href="staff/info.php?s=<?= $aa["number"] ?>"><?= $aa["name"] ?></a></td>
                                             <td><?= $aa["gender"] ?></td>
                                             <td><?= $aa["role"] ?></td>
-                                            <td><a href="department-info.php?d=<?= $aa["department_id"] ?>"><?= $aa["department_name"] ?></a></td>
+                                            <td><a href="department/info.php?d=<?= $aa["department_id"] ?>"><?= $aa["department_name"] ?></a></td>
                                             <td>
-                                                <a href="staff-info.php?s=<?= $aa["number"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
+                                                <a href="staff/info.php?s=<?= $aa["number"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
                                                 <button id="<?= $aa["number"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>
                                                 <button id="<?= $aa["number"] ?>" class="btn btn-danger btn-xs delete-btn">Delete</button>
                                             </td>

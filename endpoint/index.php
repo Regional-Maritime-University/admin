@@ -1291,6 +1291,21 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         }
         die(json_encode(array("success" => true, "data" => $fee_structure->fetch("id", $_POST["fee_structure"]))));
     } elseif ($_GET["url"] == "add-fee-structure") {
+        if (!isset($_POST["program"]) || empty($_POST["program"])) {
+            die(json_encode(array("success" => false, "message" => "Program is required!")));
+        }
+        if (!isset($_POST["type"]) || empty($_POST["type"])) {
+            die(json_encode(array("success" => false, "message" => "Fee type is required!")));
+        }
+        if (!isset($_POST["category"]) || empty($_POST["category"])) {
+            die(json_encode(array("success" => false, "message" => "Fee category is required!")));
+        }
+        if (!isset($_POST["member_amount"]) || empty($_POST["member_amount"])) {
+            die(json_encode(array("success" => false, "message" => "Member amount is required!")));
+        }
+        if (!isset($_POST["non_member_amount"]) || empty($_POST["non_member_amount"])) {
+            die(json_encode(array("success" => false, "message" => "Non member amount is required!")));
+        }
         die(json_encode($fee_structure->add($_POST)));
     } elseif ($_GET["url"] == "update-fee-structure") {
         if (!isset($_POST["fee_structure"]) || empty($_POST["fee_structure"])) {
@@ -1324,6 +1339,22 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         die(json_encode($fee_structure->delete($_POST["fee_structure"])));
     } elseif ($_GET["url"] == "total-fee-structure") {
         die(json_encode($fee_structure->fetch($_POST["key"], $_POST["value"], $_POST["archived"])));
+    }
+
+    // Fee Items
+    elseif ($_GET["url"] == "fetch-fee-item") {
+        if (!isset($_POST["fee_structure"]) || empty($_POST["fee_structure"])) {
+            die(json_encode(array("success" => false, "message" => "Fee structure is required!")));
+        }
+        die(json_encode(array("success" => true, "data" => $fee_item->fetch("fee", $_POST["fee_structure"]))));
+    } elseif ($_GET["url"] == "add-fee-item") {
+        if (!isset($_POST["fee_structure"]) || empty($_POST["fee_structure"])) {
+            die(json_encode(array("success" => false, "message" => "Fee structure is required!")));
+        }
+        if (!isset($_POST["items"]) || empty($_POST["items"])) {
+            die(json_encode(array("success" => false, "message" => "A fee item is required!")));
+        }
+        die(json_encode($fee_item->add($_POST)));
     }
 
     //students

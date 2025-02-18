@@ -591,9 +591,9 @@ require_once('../inc/page-data.php');
                                             <td><?= $aa["category"] ?></td>
                                             <td><?= $aa["member_amount"] ?></td>
                                             <td><?= $aa["non_member_amount"] ?></td>
-                                            <td><a href="program-info.php?d=<?= $aa["program_id"] ?>"><?= $aa["program_name"] ?></a></td>
+                                            <td><a href="program/info.php?d=<?= $aa["program_id"] ?>"><?= $aa["program_name"] ?></a></td>
                                             <td>
-                                                <a href="fee_structure-info.php?c=<?= $aa["id"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
+                                                <a href="fee_structure/info.php?c=<?= $aa["id"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
                                                 <button id="<?= $aa["id"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>
                                                 <button id="<?= $aa["id"] ?>" class="btn btn-danger btn-xs archive-btn">Archive</button>
                                             </td>

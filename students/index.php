@@ -540,15 +540,6 @@ require_once('../inc/page-data.php');
             </nav>
         </div><!-- End Page Title -->
 
-        <section class="mb-4 section dashboard">
-            <div style="display:flex; flex-direction: row-reverse;">
-                <button class="action-btn btn btn-success btn-xs" onclick="openAcademicYearModal()">
-                    <i class="fas fa-plus"></i>
-                    <span>Add</span>
-                </button>
-            </div>
-        </section>
-
         <section class="section dashboard">
             <div class="row">
                 <div class="col-12">
@@ -581,11 +572,11 @@ require_once('../inc/page-data.php');
                                                 <td><?= $aa["index_number"] ?></td>
                                                 <td><?= $aa["full_name"] ?></td>
                                                 <td><?= $aa["gender"] ?></td>
-                                                <td><a href="program-info.php?d=<?= $aa["program_id"] ?>"><?= $aa["program_name"] ?></a></td>
-                                                <td><a href="department-info.php?d=<?= $aa["department_id"] ?>"><?= $aa["department_name"] ?></a></td>
+                                                <td><a href="program/info.php?d=<?= $aa["program_id"] ?>"><?= $aa["program_name"] ?></a></td>
+                                                <td><a href="department/info.php?d=<?= $aa["department_id"] ?>"><?= $aa["department_name"] ?></a></td>
                                                 <td><?= $aa["class_code"] ?></td>
                                                 <td>
-                                                    <a href="student-info.php?c=<?= $aa["index_number"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
+                                                    <a href="student/info.php?c=<?= $aa["index_number"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
                                                     <button id="<?= $aa["index_number"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>
                                                     <button id="<?= $aa["index_number"] ?>" class="btn btn-danger btn-xs delete-btn">Delete</button>
                                                 </td>
@@ -607,6 +598,7 @@ require_once('../inc/page-data.php');
     </main><!-- End #main -->
 
     <?= require_once("../inc/footer-section.php") ?>
+
     <script>
         $(document).ready(function() {
 
