@@ -1,0 +1,116 @@
+Warning: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '12415766' for key 'app_number'
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(119): Src\System\DatabaseMethods->query('INSERT INTO `st...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Controller\AdminController.php(3199): Src\System\DatabaseMethods->inputData('INSERT INTO `st...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Controller\AdminController.php(3299): Src\Controller\AdminController->addNewStudent(Array)
+#4 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1100): Src\Controller\AdminController->enrollApplicant('1448', '17', '100', '2')
+#5 {main}
+Warning: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '12431023' for key 'app_number'
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(119): Src\System\DatabaseMethods->query('INSERT INTO `st...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Controller\AdminController.php(3199): Src\System\DatabaseMethods->inputData('INSERT INTO `st...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Controller\AdminController.php(3299): Src\Controller\AdminController->addNewStudent(Array)
+#4 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1100): Src\Controller\AdminController->enrollApplicant('1694', '17', '100', '2')
+#5 {main}
+Warning: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.credits' in 'field list'
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(104): Src\System\DatabaseMethods->query('SELECT c.`credi...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Controller\AdminController.php(3326): Src\System\DatabaseMethods->getData('SELECT c.`credi...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1110): Src\Controller\AdminController->setStudentCourses('DIT26', '17')
+#4 {main}
+Warning: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '12431023' for key 'app_number'
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(119): Src\System\DatabaseMethods->query('INSERT INTO `st...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Controller\AdminController.php(3199): Src\System\DatabaseMethods->inputData('INSERT INTO `st...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Controller\AdminController.php(3299): Src\Controller\AdminController->addNewStudent(Array)
+#4 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1100): Src\Controller\AdminController->enrollApplicant('1694', '17', '100', '2')
+#5 {main}
+Warning: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.credits' in 'field list'
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(104): Src\System\DatabaseMethods->query('SELECT c.`credi...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Controller\AdminController.php(3326): Src\System\DatabaseMethods->getData('SELECT c.`credi...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1110): Src\Controller\AdminController->setStudentCourses('DIT26', '17')
+#4 {main}
+Warning: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(104): Src\System\DatabaseMethods->query('SELECT `name`, ...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(65): Src\System\DatabaseMethods->getData('SELECT `name`, ...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1289): Src\Core\FeesStructure->add(Array)
+#4 {main}
+Warning: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(104): Src\System\DatabaseMethods->query('SELECT `id` FRO...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(56): Src\System\DatabaseMethods->getData('SELECT `id` FRO...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1289): Src\Core\FeesStructure->add(Array)
+#4 {main}
+Warning: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(104): Src\System\DatabaseMethods->query('SELECT `id` FRO...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(56): Src\System\DatabaseMethods->getData('SELECT `id` FRO...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1289): Src\Core\FeesStructure->add(Array)
+#4 {main}
+Warning: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(104): Src\System\DatabaseMethods->query('SELECT `name`, ...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(72): Src\System\DatabaseMethods->getData('SELECT `name`, ...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1289): Src\Core\FeesStructure->add(Array)
+#4 {main}
+Warning: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(104): Src\System\DatabaseMethods->query('SELECT `name`, ...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(72): Src\System\DatabaseMethods->getData('SELECT `name`, ...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1289): Src\Core\FeesStructure->add(Array)
+#4 {main}
+Warning: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'DESC' at line 5
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(104): Src\System\DatabaseMethods->query('SELECT fs.`id`,...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(50): Src\System\DatabaseMethods->getData('SELECT fs.`id`,...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\admin\fees-structure.php(583): Src\Core\FeesStructure->fetch()
+#4 {main}
+Warning: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'DESC' at line 5
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(104): Src\System\DatabaseMethods->query('SELECT fs.`id`,...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(50): Src\System\DatabaseMethods->getData('SELECT fs.`id`,...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\admin\fees-structure.php(583): Src\Core\FeesStructure->fetch()
+#4 {main}
+Warning: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''655.00', `non_member_amount`'1200.00', `archived`='0' 
+        WHERE `id` =...' at line 2
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(119): Src\System\DatabaseMethods->query('UPDATE fees_str...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(115): Src\System\DatabaseMethods->inputData('UPDATE fees_str...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1312): Src\Core\FeesStructure->update(Array)
+#4 {main}
+Warning: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''655.00', `non_member_amount`'1200.00', `archived`='0' 
+        WHERE `id` =...' at line 2
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(119): Src\System\DatabaseMethods->query('UPDATE fees_str...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(115): Src\System\DatabaseMethods->inputData('UPDATE fees_str...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1312): Src\Core\FeesStructure->update(Array)
+#4 {main}
+Warning: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''700', `non_member_amount`'1200.00', `archived`='0' 
+        WHERE `id` = '3'' at line 2
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(119): Src\System\DatabaseMethods->query('UPDATE fees_str...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(115): Src\System\DatabaseMethods->inputData('UPDATE fees_str...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1312): Src\Core\FeesStructure->update(Array)
+#4 {main}
+Warning: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''3000', `non_member_amount`'450.00', `archived`='0' 
+        WHERE `id` = '2'' at line 2
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(119): Src\System\DatabaseMethods->query('UPDATE fees_str...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(115): Src\System\DatabaseMethods->inputData('UPDATE fees_str...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1312): Src\Core\FeesStructure->update(Array)
+#4 {main}
+Warning: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'rmu_admissions_test.fee_structure' doesn't exist
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(104): Src\System\DatabaseMethods->query('SELECT fs.`id`,...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeesStructure.php(54): Src\System\DatabaseMethods->getData('SELECT fs.`id`,...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\admin\fee-structure.php(583): Src\Core\FeesStructure->fetch()
+#4 {main}
+Warning: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near ''6000', `non_member_amount`'11000.00', `archived`='0' 
+        WHERE `id` = '1'' at line 2
+Trace: #0 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\System\DatabaseMethods.php(119): Src\System\DatabaseMethods->query('UPDATE fee_stru...', Array)
+#2 C:\xampp\htdocs\test\rmu_admissions_admin_test\src\Core\FeeStructure.php(115): Src\System\DatabaseMethods->inputData('UPDATE fee_stru...', Array)
+#3 C:\xampp\htdocs\test\rmu_admissions_admin_test\endpoint\index.php(1314): Src\Core\FeeStructure->update(Array)
+#4 {main}
