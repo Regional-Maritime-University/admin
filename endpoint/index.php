@@ -1158,14 +1158,38 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     //Departments
 
     elseif ($_GET["url"] == "fetch-department") {
-        die(json_encode($program->fetch($_POST["key"], $_POST["value"], $_POST["archived"])));
+        if (!isset($_POST["department"]) || empty($_POST["department"])) {
+            die(json_encode(array("success" => false, "message" => "Department id is required!")));
+        }
+        die(json_encode($program->fetch('id', $_POST["department"])));
     } elseif ($_GET["url"] == "add-department") {
+        if (!isset($_POST["name"]) || empty($_POST["name"])) {
+            die(json_encode(array("success" => false, "message" => "Department name is required!")));
+        }
+        if (!isset($_POST["hod"]) || empty($_POST["hod"])) {
+            die(json_encode(array("success" => false, "message" => "Department hod is required!")));
+        }
         die(json_encode($department->add($_POST)));
     } elseif ($_GET["url"] == "update-department") {
+        if (!isset($_POST["department"]) || empty($_POST["department"])) {
+            die(json_encode(array("success" => false, "message" => "Deaprtment id is required!")));
+        }
+        if (!isset($_POST["name"]) || empty($_POST["name"])) {
+            die(json_encode(array("success" => false, "message" => "Department name is required!")));
+        }
+        if (!isset($_POST["hod"]) || empty($_POST["hod"])) {
+            die(json_encode(array("success" => false, "message" => "Department hod is required!")));
+        }
         die(json_encode($department->update($_POST)));
     } elseif ($_GET["url"] == "archive-department") {
+        if (!isset($_POST["department"]) || empty($_POST["department"])) {
+            die(json_encode(array("success" => false, "message" => "Deaprtment id is required!")));
+        }
         die(json_encode($department->archive($_POST["department"])));
     } elseif ($_GET["url"] == "delete-department") {
+        if (!isset($_POST["department"]) || empty($_POST["department"])) {
+            die(json_encode(array("success" => false, "message" => "Deaprtment id is required!")));
+        }
         die(json_encode($department->delete($_POST["department"])));
     } elseif ($_GET["url"] == "total-department") {
         die(json_encode($department->total($_POST["archived"])));

@@ -38,13 +38,16 @@ $_SESSION["lastAccessed"] = time();
 require_once('../bootstrap.php');
 
 use Src\Controller\AdminController;
+use Src\Core\Course;
 use Src\Core\Department;
+use Src\Core\Staff;
 
 require_once('../inc/admin-database-con.php');
 
 $admin = new AdminController($db, $user, $pass);
 $department = new Department($db, $user, $pass);
-require_once('../inc/page-data.php');
+$course = new Course($db, $user, $pass);
+$staff = new Staff($db, $user, $pass);
 
 ?>
 <!DOCTYPE html>
@@ -542,7 +545,7 @@ require_once('../inc/page-data.php');
 
         <section class="mb-4 section dashboard">
             <div style="display:flex; flex-direction: row-reverse;">
-                <button class="action-btn btn btn-success btn-xs" onclick="openAcademicYearModal()">
+                <button class="action-btn btn btn-success btn-sm" onclick="openAddDepartmentModal()">
                     <i class="fas fa-plus"></i>
                     <span>Add</span>
                 </button>
@@ -596,67 +599,238 @@ require_once('../inc/page-data.php');
             </div>
         </section>
 
+        <!-- Add New Staff Modal -->
+        <div class="modal" id="addDepartmentModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('addDepartmentModal')">×</button>
+                    <h2>Add New Department</h2>
+                    <form id="addDepartmentForm" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="hod">HOD</label>
+                            <select id="hod" name="hod" required>
+                                <option value="" hidden>Select</option>
+                                <?php
+                                $staffs = $staff->fetch();
+                                foreach ($staffs as $staff) {
+                                ?>
+                                    <option value="<?= $staff["number"] ?>"><?= $staff["name"] ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('addDepartmentModal')">Cancel</button>
+                            <button type="submit" class="btn btn-primary addDepartment-btn">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Staff Modal -->
+        <div class="modal" id="editDepartmentModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('editDepartmentModal')">×</button>
+                    <h2>Edit Department</h2>
+                    <form id="editDepartmentForm" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="edit-name">Name</label>
+                            <input type="text" id="edit-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-hod">HOD</label>
+                            <select id="edit-hod" name="hod" required>
+                                <option value="" hidden>Select</option>
+                                <?php
+                                $staffs = $staff->fetch();
+                                foreach ($staffs as $staff) {
+                                ?>
+                                    <option value="<?= $staff["number"] ?>"><?= $staff["name"] ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('editDepartmentModal')">Cancel</button>
+                            <button type="submit" class="btn btn-primary editDepartment-btn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </main><!-- End #main -->
 
     <?= require_once("../inc/footer-section.php") ?>
     <script>
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            if (modalId == "addDepartmentModal") {
+                document.getElementById("addDepartmentForm").reset();
+            } else if (modalId == "editDepartmentModal") {
+                console.log(modalId)
+                document.getElementById("editDepartmentForm").reset();
+            } else if (modalId == "uploadCourseModal") {
+                $("#upload-notification").text("");
+                document.getElementById("uploadCourseForm").reset();
+            }
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Specific modal openers
+        function openAddDepartmentModal() {
+            openModal('addDepartmentModal');
+        }
+
+        function openEditDepartmentModal() {
+            openModal('editDepartmentModal');
+        }
+
+        function openUploadCourseModal() {
+            openModal('uploadCourseModal');
+        }
+
+        function setEditFormData(data) {
+            $("#edit-code").val(data.code);
+            $("#edit-name").val(data.name);
+            $("#edit-creditHours").val(data.credit_hours);
+            $("#edit-contactHours").val(data.contact_hours);
+            $("#edit-semester").val(data.semester);
+            $("#edit-level").val(data.level);
+            $("#edit-category").val(data.category_id);
+            $("#edit-department").val(data.department_id);
+        }
+
         $(document).ready(function() {
 
-            $(".form-select").change("blur", function() {
+            $("#addDepartmentForm").on("submit", function(e) {
+
+                e.preventDefault();
+
+                // Create a new FormData object
+                var formData = new FormData(this);
+
+                // Set up ajax request
                 $.ajax({
-                    type: "POST",
-                    url: "../endpoint/formInfo",
-                    data: {
-                        form_id: this.value,
-                    },
+                    type: 'POST',
+                    url: "../endpoint/add-department",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     success: function(result) {
                         console.log(result);
                         if (result.success) {
-                            $("#form-cost-display").show();
-                            $("#form-name").text(result.message[0]["name"]);
-                            $("#form-cost").text(result.message[0]["amount"]);
-                            $("#form_price").val(result.message[0]["amount"]);
-                            //$("#form_type").val(result.message[0]["form_type"]);
-                            $(':input[type="submit"]').prop('disabled', false);
-                        } else {
-                            if (result.message == "logout") {
-                                window.location.href = "?logout=true";
-                                return;
-                            }
-                        }
+                            alert(result.message);
+                            closeModal("addDepartmentModal");
+                            location.reload();
+                        } else alert(result.message);
                     },
-                    error: function(error) {
-                        console.log(error.statusText);
+                    error: function() {
+                        alert('Error: Internal server error!');
+                    },
+                    ajaxStart: function() {
+                        $(".addDepartment-btn").prop("disabled", true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...');
+                    },
+                    ajaxStop: function() {
+                        $(".addDepartment-btn").prop("disabled", false).html('Upload');
                     }
                 });
             });
 
-            $("#approve-btn, #decline-btn").on("click", function(e) {
-                const formAction = $(this).attr('id') === 'approve-btn' ? 'approve' : 'decline';
-                const selectedCount = $('input[name="app-login[]"]:checked').length;
+            $("#editDepartmentForm").on("submit", function(e) {
 
-                if (selectedCount === 0) {
-                    alert("Please select at least one application.");
-                    return;
-                }
+                e.preventDefault();
 
-                const confirmMessage = `Are you sure you want to ${formAction} ${selectedCount} selected application(s)?`;
-                if (!confirm(confirmMessage)) return;
+                // Create a new FormData object
+                var formData = new FormData(this);
 
-                // Set the action value
-                $('input[name="action"]').val(formAction);
+                // Set up ajax request
+                $.ajax({
+                    type: 'POST',
+                    url: "../endpoint/edit-department",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(result) {
+                        console.log(result);
+                        if (result.success) {
+                            alert(result.message);
+                            closeModal("editDepartmentModal");
+                            location.reload();
+                        } else alert(result.message);
+                    },
+                    error: function() {
+                        alert('Error: Internal server error!');
+                    },
+                    ajaxStart: function() {
+                        $(".editDepartment-btn").prop("disabled", true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...');
+                    },
+                    ajaxStop: function() {
+                        $(".editDepartment-btn").prop("disabled", false).html('Upload');
+                    }
+                });
+            });
 
-                // Submit the form
-                const form = $("#shortlist-form")[0];
-                const formData = new FormData(form);
+            $(document).on("click", ".edit-btn", function(e) {
+                const code = $(this).attr('id');
+
+                const formData = {
+                    "code": code
+                };
 
                 $.ajax({
                     type: "POST",
-                    url: "../endpoint/shortlisted-application",
+                    url: "../endpoint/fetch-department",
                     data: formData,
-                    contentType: false,
-                    cache: false,
-                    processData: false,
+                    success: function(result) {
+                        console.log(result);
+                        if (result.success) {
+                            if (result.data) {
+                                setEditFormData(result.data[0]);
+                                openEditDepartmentModal();
+                            } else alert("No data found");
+                        } else {
+                            if (result.message == "logout") {
+                                alert('Your session expired. Please refresh the page to continue!');
+                                window.location.href = "?logout=true";
+                            } else {
+                                alert(result.message);
+                            }
+                        }
+                    },
+                    error: function(error) {
+                        console.log("error area: ", error);
+                        alert("An error occurred while processing your request.");
+                    }
+                });
+            });
+
+            $(document).on("click", ".delete-btn", function(e) {
+                const code = $(this).attr('id');
+
+                const confirmMessage = `Are you sure you want to delete this department?`;
+                if (!confirm(confirmMessage)) return;
+
+                const formData = {
+                    "code": code
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "../endpoint/delete-department",
+                    data: formData,
                     success: function(result) {
                         console.log(result);
                         if (result.success) {
@@ -678,36 +852,6 @@ require_once('../inc/page-data.php');
                 });
             });
 
-            $("#num1").focus();
-
-            $(".num").on("keyup", function() {
-                if (this.value.length == 4) {
-                    $(this).next(":input").focus().select(); //.val(''); and as well clesr
-                }
-            });
-
-            $("input[type='text']").on("click", function() {
-                $(this).select();
-            });
-
-            function flashMessage(bg_color, message) {
-                const flashMessage = document.getElementById("flashMessage");
-
-                flashMessage.classList.add(bg_color);
-                flashMessage.innerHTML = message;
-
-                setTimeout(() => {
-                    flashMessage.style.visibility = "visible";
-                    flashMessage.classList.add("show");
-                }, 1000);
-
-                setTimeout(() => {
-                    flashMessage.classList.remove("show");
-                    setTimeout(() => {
-                        flashMessage.style.visibility = "hidden";
-                    }, 5000);
-                }, 5000);
-            }
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
