@@ -45,8 +45,8 @@ class FeeStructure
                 break;
         }
 
-        $query = "SELECT fs.`id`, fs.`fk_program_id` AS program_id, fs.`type`, fs.`category`, fs.`name`, fs.`currency`, 
-                fs.`member_amount`, fs.`non_member_amount`, fs.`created_at`, 
+        $query = "SELECT fs.`id`, fs.`fk_program_id` AS program_id, fs.`type`, fs.`category`, 
+                fs.`name`, fs.`currency`, fs.`created_at`, 
                 pg.name AS program_name, pg.regular AS program_reg_available, pg.weekend AS program_wkd_available 
                 FROM `fee_structure` AS fs, `programs` AS pg 
                 WHERE fs.`fk_program_id` = pg.`id` AND fs.`archived` = :ar $concat_stmt ORDER BY fs.`id` DESC";
@@ -77,16 +77,14 @@ class FeeStructure
         $fee_structure_name = $program[0]["index_code"] . " - {$data["type"]}" . " [{$data["category"]}]";
 
         $query = "INSERT INTO `fee_structure` 
-                (`fk_program_id`, `currency`, `type`, `category`, `name`, `member_amount`, `non_member_amount`) 
-                VALUES(:p, :r, :t, :c, :n, :m, :nm)";
+                (`fk_program_id`, `currency`, `type`, `category`, `name`) 
+                VALUES(:p, :r, :t, :c, :n)";
         $params = array(
             ":p" => $data["program"],
             ":r" => $data["currency"],
             ":t" => $data["type"],
             ":c" => $data["category"],
-            ":n" => $fee_structure_name,
-            ":m" => $data["member_amount"],
-            ":nm" => $data["non_member_amount"]
+            ":n" => $fee_structure_name
         );
         $query_result = $this->dm->inputData($query, $params);
         if ($query_result) {

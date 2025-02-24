@@ -67,7 +67,7 @@ $staff = new Staff($db, $user, $pass);
         }
 
         :root {
-            --primary-color: #2c3e50;
+            --primary-color: #003262;
             --secondary-color: #34495e;
             --accent-color: #3498db;
             --text-color: #ecf0f1;
@@ -147,14 +147,14 @@ $staff = new Staff($db, $user, $pass);
         .menu-items {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 10px;
         }
 
         .menu-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px;
+            padding: 5px;
             text-decoration: none;
             color: var(--text-color);
             border-radius: 5px;
@@ -400,7 +400,7 @@ $staff = new Staff($db, $user, $pass);
             gap: 20px;
         }
 
-        /* Modal Styles */
+        /* Modal Base Styles */
         .modal {
             display: none;
             position: fixed;
@@ -419,32 +419,221 @@ $staff = new Staff($db, $user, $pass);
             display: flex;
         }
 
+        /* Modal Dialog - Container for modal content */
+        .modal-dialog {
+            position: relative;
+            width: 100%;
+            margin: 1.75rem auto;
+            pointer-events: none;
+        }
+
+        /* Modal Content */
         .modal-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            pointer-events: auto;
             background-color: white;
             border-radius: 10px;
-            width: 100%;
-            max-width: 500px;
             padding: 30px;
-            position: relative;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 0 20px;
         }
 
-        .modal-content h2 {
-            margin-bottom: 20px;
-            color: var(--primary-color);
-            text-align: center;
+        /* Scrollable Modal */
+        .modal-dialog.modal-scrollable {
+            display: flex;
+            max-height: calc(100% - 3.5rem);
+            /* Account for margin */
         }
 
+        .modal-dialog.modal-scrollable .modal-content {
+            max-height: 100%;
+            overflow: hidden;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body {
+            overflow-y: auto;
+            /* Custom scrollbar styling */
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) #f1f1f1;
+        }
+
+        /* Custom scrollbar for webkit browsers */
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* Modal Sizes */
+        /* Default size */
+        .modal-dialog {
+            max-width: 500px;
+        }
+
+        /* Small modal */
+        .modal-dialog.modal-sm {
+            max-width: 300px;
+        }
+
+        /* Large modal */
+        .modal-dialog.modal-lg {
+            max-width: 800px;
+        }
+
+        /* Extra large modal */
+        .modal-dialog.modal-xl {
+            max-width: 1140px;
+        }
+
+        /* Fullscreen Modal Variations */
+        .modal-dialog.modal-fullscreen {
+            width: 100vw;
+            max-width: none;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .modal-dialog.modal-fullscreen .modal-content {
+            height: 100%;
+            border: 0;
+            border-radius: 0;
+        }
+
+        /* Responsive Fullscreen Variations */
+        @media (max-width: 576px) {
+            .modal-dialog.modal-fullscreen-sm-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-sm-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .modal-dialog.modal-fullscreen-md-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-md-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .modal-dialog.modal-fullscreen-lg-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-lg-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .modal-dialog.modal-fullscreen-xl-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-xl-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .modal-dialog.modal-fullscreen-xxl-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-xxl-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        /* Modal Header */
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        /* Modal Body */
+        .modal-body {
+            position: relative;
+            flex: 1 1 auto;
+            padding: 1rem 0;
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 1rem;
+            border-top: 1px solid #dee2e6;
+        }
+
+        /* Close Button */
         .close-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 1.5rem;
+            right: 1.5rem;
             background: none;
             border: none;
-            font-size: 24px;
-            cursor: pointer;
+            font-size: 1.5rem;
+            line-height: 1;
             color: var(--danger-color);
+            cursor: pointer;
+            padding: 0.5rem;
         }
+
+        .close-btn:hover {
+            opacity: 0.75;
+        }
+
+        /* Modal Styles */
 
         .form-group {
             margin-bottom: 15px;
@@ -473,12 +662,6 @@ $staff = new Staff($db, $user, $pass);
             display: flex;
             align-items: center;
             gap: 5px;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
         }
 
         .cancel-btn,
@@ -519,6 +702,134 @@ $staff = new Staff($db, $user, $pass);
             font-size: 12px !important;
             line-height: 1.5 !important;
             border-radius: 3px !important;
+        }
+
+        input.transform-text,
+        select.transform-text,
+        textarea.transform-text {
+            text-transform: uppercase !important;
+        }
+
+        /**
+        Fee structure and Items
+         */
+        .fee-structure-form {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+
+        .fee-items-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .no-items-message {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            color: #666;
+        }
+
+        .no-items-message i {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .fee-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 40px;
+            gap: 15px;
+            align-items: start;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .fee-item:hover {
+            background-color: #f1f3f5;
+        }
+
+        .fee-item select,
+        .fee-item input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .fee-item input:focus,
+        .fee-item select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .remove-item-btn {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+
+        .remove-item-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .add-fee-item-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .add-fee-item-btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        .amount-field {
+            position: relative;
+        }
+
+        .amount-field::before {
+            content: "GH₵";
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 14px;
+        }
+
+        .amount-field input {
+            padding-left: 35px;
+        }
+
+        @media (max-width: 768px) {
+            .fee-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .remove-item-btn {
+                justify-self: end;
+            }
         }
     </style>
     <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
@@ -615,10 +926,10 @@ $staff = new Staff($db, $user, $pass);
                             <select id="hod" name="hod" required>
                                 <option value="" hidden>Select</option>
                                 <?php
-                                $staffs = $staff->fetch();
-                                foreach ($staffs as $staff) {
+                                $staffs = $staff->fetch("role", "hod");
+                                foreach ($staffs as $hod) {
                                 ?>
-                                    <option value="<?= $staff["number"] ?>"><?= $staff["name"] ?></option>
+                                    <option value="<?= $hod["number"] ?>"><?= $hod["name"] ?></option>
                                 <?php
                                 }
                                 ?>
@@ -784,10 +1095,10 @@ $staff = new Staff($db, $user, $pass);
             });
 
             $(document).on("click", ".edit-btn", function(e) {
-                const code = $(this).attr('id');
+                const department = $(this).attr('id');
 
                 const formData = {
-                    "code": code
+                    "department": department
                 };
 
                 $.ajax({

@@ -63,7 +63,7 @@ require_once('../inc/page-data.php');
         }
 
         :root {
-            --primary-color: #2c3e50;
+            --primary-color: #003262;
             --secondary-color: #34495e;
             --accent-color: #3498db;
             --text-color: #ecf0f1;
@@ -143,14 +143,14 @@ require_once('../inc/page-data.php');
         .menu-items {
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 10px;
         }
 
         .menu-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px;
+            padding: 5px;
             text-decoration: none;
             color: var(--text-color);
             border-radius: 5px;
@@ -396,7 +396,7 @@ require_once('../inc/page-data.php');
             gap: 20px;
         }
 
-        /* Modal Styles */
+        /* Modal Base Styles */
         .modal {
             display: none;
             position: fixed;
@@ -415,32 +415,221 @@ require_once('../inc/page-data.php');
             display: flex;
         }
 
+        /* Modal Dialog - Container for modal content */
+        .modal-dialog {
+            position: relative;
+            width: 100%;
+            margin: 1.75rem auto;
+            pointer-events: none;
+        }
+
+        /* Modal Content */
         .modal-content {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            pointer-events: auto;
             background-color: white;
             border-radius: 10px;
-            width: 100%;
-            max-width: 500px;
             padding: 30px;
-            position: relative;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 0 20px;
         }
 
-        .modal-content h2 {
-            margin-bottom: 20px;
-            color: var(--primary-color);
-            text-align: center;
+        /* Scrollable Modal */
+        .modal-dialog.modal-scrollable {
+            display: flex;
+            max-height: calc(100% - 3.5rem);
+            /* Account for margin */
         }
 
+        .modal-dialog.modal-scrollable .modal-content {
+            max-height: 100%;
+            overflow: hidden;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body {
+            overflow-y: auto;
+            /* Custom scrollbar styling */
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-color) #f1f1f1;
+        }
+
+        /* Custom scrollbar for webkit browsers */
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border-radius: 3px;
+        }
+
+        .modal-dialog.modal-scrollable .modal-body::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        /* Modal Sizes */
+        /* Default size */
+        .modal-dialog {
+            max-width: 500px;
+        }
+
+        /* Small modal */
+        .modal-dialog.modal-sm {
+            max-width: 300px;
+        }
+
+        /* Large modal */
+        .modal-dialog.modal-lg {
+            max-width: 800px;
+        }
+
+        /* Extra large modal */
+        .modal-dialog.modal-xl {
+            max-width: 1140px;
+        }
+
+        /* Fullscreen Modal Variations */
+        .modal-dialog.modal-fullscreen {
+            width: 100vw;
+            max-width: none;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .modal-dialog.modal-fullscreen .modal-content {
+            height: 100%;
+            border: 0;
+            border-radius: 0;
+        }
+
+        /* Responsive Fullscreen Variations */
+        @media (max-width: 576px) {
+            .modal-dialog.modal-fullscreen-sm-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-sm-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .modal-dialog.modal-fullscreen-md-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-md-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .modal-dialog.modal-fullscreen-lg-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-lg-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 1200px) {
+            .modal-dialog.modal-fullscreen-xl-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-xl-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        @media (max-width: 1400px) {
+            .modal-dialog.modal-fullscreen-xxl-down {
+                width: 100vw;
+                max-width: none;
+                height: 100vh;
+                margin: 0;
+            }
+
+            .modal-dialog.modal-fullscreen-xxl-down .modal-content {
+                height: 100%;
+                border: 0;
+                border-radius: 0;
+            }
+        }
+
+        /* Modal Header */
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        /* Modal Body */
+        .modal-body {
+            position: relative;
+            flex: 1 1 auto;
+            padding: 1rem 0;
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding-top: 1rem;
+            border-top: 1px solid #dee2e6;
+        }
+
+        /* Close Button */
         .close-btn {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 1.5rem;
+            right: 1.5rem;
             background: none;
             border: none;
-            font-size: 24px;
-            cursor: pointer;
+            font-size: 1.5rem;
+            line-height: 1;
             color: var(--danger-color);
+            cursor: pointer;
+            padding: 0.5rem;
         }
+
+        .close-btn:hover {
+            opacity: 0.75;
+        }
+
+        /* Modal Styles */
 
         .form-group {
             margin-bottom: 15px;
@@ -469,12 +658,6 @@ require_once('../inc/page-data.php');
             display: flex;
             align-items: center;
             gap: 5px;
-        }
-
-        .modal-footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
         }
 
         .cancel-btn,
@@ -516,6 +699,134 @@ require_once('../inc/page-data.php');
             line-height: 1.5 !important;
             border-radius: 3px !important;
         }
+
+        input.transform-text,
+        select.transform-text,
+        textarea.transform-text {
+            text-transform: uppercase !important;
+        }
+
+        /**
+        Fee structure and Items
+         */
+        .fee-structure-form {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+        }
+
+        .fee-items-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .no-items-message {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            color: #666;
+        }
+
+        .no-items-message i {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .fee-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 40px;
+            gap: 15px;
+            align-items: start;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .fee-item:hover {
+            background-color: #f1f3f5;
+        }
+
+        .fee-item select,
+        .fee-item input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .fee-item input:focus,
+        .fee-item select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .remove-item-btn {
+            background: none;
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            padding: 5px;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+
+        .remove-item-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .add-fee-item-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .add-fee-item-btn:hover {
+            background-color: var(--primary-color);
+        }
+
+        .amount-field {
+            position: relative;
+        }
+
+        .amount-field::before {
+            content: "GH₵";
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 14px;
+        }
+
+        .amount-field input {
+            padding-left: 35px;
+        }
+
+        @media (max-width: 768px) {
+            .fee-item {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+            .remove-item-btn {
+                justify-self: end;
+            }
+        }
     </style>
     <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/vendor/bootstrap-icons/bootstrap-icons.css">
@@ -542,7 +853,7 @@ require_once('../inc/page-data.php');
 
         <section class="mb-4 section dashboard">
             <div style="display:flex; flex-direction: row-reverse;">
-                <button class="action-btn btn btn-success btn-xs" onclick="openAdmissionPeriodModal()">
+                <button class="action-btn btn btn-success btn-sm" onclick="openAddStaffModal()">
                     <i class="fas fa-plus"></i>
                     <span>Add</span>
                 </button>
@@ -598,6 +909,104 @@ require_once('../inc/page-data.php');
             </div>
         </section>
 
+        <!-- Add New Staff Modal -->
+        <div class="modal" id="addStaffModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('addStaffModal')">×</button>
+                    <h2>Add New Staff</h2>
+                    <form id="addStaffForm" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="prefix">Prefix</label>
+                            <select required class="form-select form-select-sm mb-3" name="prefix" id="prefix">
+                                <option value="" hidden>Select</option>
+                                <option value="Mr.">Mr.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Ms.">Ms.</option>
+                                <option value="Prof. Dr.">Prof. Dr.</option>
+                                <option value="Prof.">Prof.</option>
+                                <option value="Rev.">>Rev.</option>
+                                <option value="Rev. Dr.">Rev. Dr.</option>
+                                <option value="Rev. Sis.">Rev. Sis.</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <input type="text" id="first_name" name="first_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="middle_name">Middle Name</label>
+                            <input type="text" id="middle_name" name="middle_name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" id="last_name" name="last_name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" name="gender" required>
+                                <option value="">Select</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="hod">HOD</label>
+                            <select id="hod" name="hod" required>
+                                <option value="" hidden>Select</option>
+                                <?php
+                                $staffs = $staff->fetch("role", "hod");
+                                foreach ($staffs as $hod) {
+                                ?>
+                                    <option value="<?= $hod["number"] ?>"><?= $hod["name"] ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('addStaffModal')">Cancel</button>
+                            <button type="submit" class="btn btn-primary addStaff-btn">Add</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Edit Staff Modal -->
+        <div class="modal" id="editStaffModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('editStaffModal')">×</button>
+                    <h2>Edit Staff</h2>
+                    <form id="editStaffForm" method="POST" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="edit-name">Name</label>
+                            <input type="text" id="edit-name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="edit-hod">HOD</label>
+                            <select id="edit-hod" name="hod" required>
+                                <option value="" hidden>Select</option>
+                                <?php
+                                $staffs = $staff->fetch();
+                                foreach ($staffs as $staff) {
+                                ?>
+                                    <option value="<?= $staff["number"] ?>"><?= $staff["name"] ?></option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('editStaffModal')">Cancel</button>
+                            <button type="submit" class="btn btn-primary editStaff-btn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </main><!-- End #main -->
 
     <?= require_once("../inc/footer-section.php") ?>
@@ -608,75 +1017,157 @@ require_once('../inc/page-data.php');
         }
 
         function closeModal(modalId) {
+            if (modalId == "addStaffModal") {
+                document.getElementById("addStaffForm").reset();
+            } else if (modalId == "editStaffModal") {
+                console.log(modalId)
+                document.getElementById("editStaffForm").reset();
+            }
             document.getElementById(modalId).classList.remove('active');
         }
 
         // Specific modal openers
-        function openAcademicYearModal() {
-            openModal('academicYearModal');
+        function openAddStaffModal() {
+            openModal('addStaffModal');
         }
 
-        function openAdmissionPeriodModal() {
-            openModal('admissionPeriodModal');
+        function openEditStaffModal() {
+            openModal('editStaffModal');
         }
+
+        function openUploadCourseModal() {
+            openModal('uploadCourseModal');
+        }
+
+        function setEditFormData(data) {
+            $("#edit-code").val(data.code);
+            $("#edit-name").val(data.name);
+            $("#edit-creditHours").val(data.credit_hours);
+            $("#edit-contactHours").val(data.contact_hours);
+            $("#edit-semester").val(data.semester);
+            $("#edit-level").val(data.level);
+            $("#edit-category").val(data.category_id);
+            $("#edit-department").val(data.department_id);
+        }
+
         $(document).ready(function() {
 
+            $("#addStaffForm").on("submit", function(e) {
 
-            $(".form-select").change("blur", function() {
+                e.preventDefault();
+
+                // Create a new FormData object
+                var formData = new FormData(this);
+
+                // Set up ajax request
                 $.ajax({
-                    type: "POST",
-                    url: "../endpoint/formInfo",
-                    data: {
-                        form_id: this.value,
-                    },
+                    type: 'POST',
+                    url: "../endpoint/add-department",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
                     success: function(result) {
                         console.log(result);
                         if (result.success) {
-                            $("#form-cost-display").show();
-                            $("#form-name").text(result.message[0]["name"]);
-                            $("#form-cost").text(result.message[0]["amount"]);
-                            $("#form_price").val(result.message[0]["amount"]);
-                            //$("#form_type").val(result.message[0]["form_type"]);
-                            $(':input[type="submit"]').prop('disabled', false);
-                        } else {
-                            if (result.message == "logout") {
-                                window.location.href = "?logout=true";
-                                return;
-                            }
-                        }
+                            alert(result.message);
+                            closeModal("addStaffModal");
+                            location.reload();
+                        } else alert(result.message);
                     },
-                    error: function(error) {
-                        console.log(error.statusText);
+                    error: function() {
+                        alert('Error: Internal server error!');
+                    },
+                    ajaxStart: function() {
+                        $(".addStaff-btn").prop("disabled", true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...');
+                    },
+                    ajaxStop: function() {
+                        $(".addStaff-btn").prop("disabled", false).html('Upload');
                     }
                 });
             });
 
-            $("#approve-btn, #decline-btn").on("click", function(e) {
-                const formAction = $(this).attr('id') === 'approve-btn' ? 'approve' : 'decline';
-                const selectedCount = $('input[name="app-login[]"]:checked').length;
+            $("#editStaffForm").on("submit", function(e) {
 
-                if (selectedCount === 0) {
-                    alert("Please select at least one application.");
-                    return;
-                }
+                e.preventDefault();
 
-                const confirmMessage = `Are you sure you want to ${formAction} ${selectedCount} selected application(s)?`;
-                if (!confirm(confirmMessage)) return;
+                // Create a new FormData object
+                var formData = new FormData(this);
 
-                // Set the action value
-                $('input[name="action"]').val(formAction);
+                // Set up ajax request
+                $.ajax({
+                    type: 'POST',
+                    url: "../endpoint/edit-department",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(result) {
+                        console.log(result);
+                        if (result.success) {
+                            alert(result.message);
+                            closeModal("editStaffModal");
+                            location.reload();
+                        } else alert(result.message);
+                    },
+                    error: function() {
+                        alert('Error: Internal server error!');
+                    },
+                    ajaxStart: function() {
+                        $(".editStaff-btn").prop("disabled", true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...');
+                    },
+                    ajaxStop: function() {
+                        $(".editStaff-btn").prop("disabled", false).html('Upload');
+                    }
+                });
+            });
 
-                // Submit the form
-                const form = $("#shortlist-form")[0];
-                const formData = new FormData(form);
+            $(document).on("click", ".edit-btn", function(e) {
+                const department = $(this).attr('id');
+
+                const formData = {
+                    "department": department
+                };
 
                 $.ajax({
                     type: "POST",
-                    url: "../endpoint/shortlisted-application",
+                    url: "../endpoint/fetch-department",
                     data: formData,
-                    contentType: false,
-                    cache: false,
-                    processData: false,
+                    success: function(result) {
+                        console.log(result);
+                        if (result.success) {
+                            if (result.data) {
+                                setEditFormData(result.data[0]);
+                                openEditStaffModal();
+                            } else alert("No data found");
+                        } else {
+                            if (result.message == "logout") {
+                                alert('Your session expired. Please refresh the page to continue!');
+                                window.location.href = "?logout=true";
+                            } else {
+                                alert(result.message);
+                            }
+                        }
+                    },
+                    error: function(error) {
+                        console.log("error area: ", error);
+                        alert("An error occurred while processing your request.");
+                    }
+                });
+            });
+
+            $(document).on("click", ".delete-btn", function(e) {
+                const code = $(this).attr('id');
+
+                const confirmMessage = `Are you sure you want to delete this department?`;
+                if (!confirm(confirmMessage)) return;
+
+                const formData = {
+                    "code": code
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "../endpoint/delete-department",
+                    data: formData,
                     success: function(result) {
                         console.log(result);
                         if (result.success) {
@@ -697,37 +1188,6 @@ require_once('../inc/page-data.php');
                     }
                 });
             });
-
-            $("#num1").focus();
-
-            $(".num").on("keyup", function() {
-                if (this.value.length == 4) {
-                    $(this).next(":input").focus().select(); //.val(''); and as well clesr
-                }
-            });
-
-            $("input[type='text']").on("click", function() {
-                $(this).select();
-            });
-
-            function flashMessage(bg_color, message) {
-                const flashMessage = document.getElementById("flashMessage");
-
-                flashMessage.classList.add(bg_color);
-                flashMessage.innerHTML = message;
-
-                setTimeout(() => {
-                    flashMessage.style.visibility = "visible";
-                    flashMessage.classList.add("show");
-                }, 1000);
-
-                setTimeout(() => {
-                    flashMessage.classList.remove("show");
-                    setTimeout(() => {
-                        flashMessage.style.visibility = "hidden";
-                    }, 5000);
-                }, 5000);
-            }
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
