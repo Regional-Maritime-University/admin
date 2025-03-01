@@ -1,3 +1,16 @@
+SELECT * FROM `form_sections_chek` WHERE admitted = 1;
+
+UPDATE form_sections_chek 
+SET 
+admitted = 0, 
+enrolled = 0, 
+programme_awarded = NULL, 
+programme_duration = NULL, 
+level_admitted = NULL, 
+shortlisted = 0, 
+stream_admitted = NULL 
+WHERE admitted  = 1;
+
 ALTER TABLE acceptance_receipts ADD COLUMN `status` TINYINT(1) DEFAULT 0 AFTER `app_login`;
 ALTER TABLE form_sections_chek ADD COLUMN `stream_admitted` VARCHAR(30) DEFAULT NULL AFTER `level_admitted`;
 ALTER TABLE form_sections_chek ADD COLUMN `shortlisted` TINYINT(1) DEFAULT 0 AFTER `level_admitted`;
@@ -67,7 +80,7 @@ INSERT INTO `fee_structure_category` (`name`) VALUES ('regular'), ('weekend');
 
 CREATE TABLE `fee_item` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
-    `name` VARCHAR(100) NOT NULL,
+    `name` VARCHAR(100) NOT NULL UNIQUE,
     `value` VARCHAR(100) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -83,8 +96,8 @@ CREATE TABLE `fee_structure` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `currency` VARCHAR(5) DEFAULT 'USD',
     `fk_program_id` INT NOT NULL,
-    `type` VARCHAR(15) NOT NULL, -- ENUM('fresher', 'topup'),
-    `category` VARCHAR(15) NOT NULL, -- ENUM('regular', 'weekend'),
+    `type` VARCHAR(15) NOT NULL,
+    `category` VARCHAR(15) NOT NULL,
     `name` VARCHAR(100) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

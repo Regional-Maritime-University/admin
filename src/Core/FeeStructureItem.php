@@ -29,8 +29,7 @@ class FeeStructureItem
                 break;
         }
 
-        $query = "SELECT fi.`id`, fi.`member_amount`, fi.`non_member_amount`, fi.`created_at`, 
-                fi.`fk_fee_structure` AS fee_structure, fs.name AS fee_structure_name 
+        $query = "SELECT fi.`id`, fi.name, fi.`member_amount`, fi.`non_member_amount` 
                 FROM `fee_structure_item` AS fi, `fee_structure` AS fs 
                 WHERE fi.`fk_fee_structure` = fs.`id` AND fi.`archived` = :ar $concat_stmt ORDER BY fi.`id` DESC";
         $params = $value ? array(":v" => $value, ":ar" => $archived) : array(":ar" => $archived);

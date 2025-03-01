@@ -833,6 +833,15 @@ require_once('../inc/page-data.php');
                 justify-self: end;
             }
         }
+
+        i.fas {
+            cursor: pointer;
+        }
+
+        .custom-tooltip {
+            --bs-tooltip-bg: var(--primary-color);
+            --bs-tooltip-color: var(--text-color);
+        }
     </style>
     <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/vendor/bootstrap-icons/bootstrap-icons.css">
@@ -845,6 +854,18 @@ require_once('../inc/page-data.php');
     <?= require_once("../inc/navbar.php") ?>
 
     <main id="main" class="main-content">
+
+        <div class="header">
+            <button class="toggle-sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+                <button class="toggle-sidebar">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
 
         <div class="pagetitle">
             <h1>Fee Structure</h1>
@@ -896,9 +917,9 @@ require_once('../inc/page-data.php');
                                             <td><?= $fs["category"] ?></td>
                                             <td><a href="program/info.php?d=<?= $fs["program_id"] ?>"><?= $fs["program_name"] ?></a></td>
                                             <td>
-                                                <button id="<?= $fs["id"] ?>" class="btn btn-primary btn-xs view-btn">View</button>
-                                                <button id="<?= $fs["id"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>
-                                                <button id="<?= $fs["id"] ?>" class="btn btn-danger btn-xs archive-btn">Archive</button>
+                                                <i id="<?= $fs["id"] ?>" class="fas fa-eye text-primary view-btn me-2" title="View"></i>
+                                                <i id="<?= $fs["id"] ?>" class="fas fa-edit text-warning edit-btn me-2" title="Edit"></i>
+                                                <i id="<?= $fs["id"] ?>" class="fas fa-archive text-danger archive-btn" title="Archive"></i>
                                             </td>
                                         </tr>
                                 <?php
@@ -1131,96 +1152,38 @@ require_once('../inc/page-data.php');
             $("#add-item-fee_structure").val(data);
         }
 
-        // All available fee types
-        var ALL_FEE_ITEMS = [{
-                value: 'Tuition',
-                label: 'Tuition'
-            },
-            {
-                value: 'Medicare/First Aid',
-                label: 'Medicare/First Aid'
-            },
-            {
-                value: 'Medical Examination',
-                label: 'Medical Examination'
-            },
-            {
-                value: 'Laboratory',
-                label: 'Laboratory'
-            },
-            {
-                value: 'SRC/Hall Dues',
-                label: 'SRC/Hall Dues'
-            },
-            {
-                value: 'Internet Access',
-                label: 'Internet Access'
-            },
-            {
-                value: 'Developement',
-                label: 'Developement'
-            },
-            {
-                value: 'Matriculation',
-                label: 'Matriculation'
-            },
-            {
-                value: 'Academic Facility Use',
-                label: 'Academic Facility Use'
-            },
-            {
-                value: 'Student Handbook',
-                label: 'Student Handbook'
-            },
-            {
-                value: 'Accommodation',
-                label: 'Accommodation'
-            },
-            {
-                value: 'Uniform',
-                label: 'Uniform'
-            },
-            {
-                value: 'Feeding 2 Meals',
-                label: 'Feeding 2 Meals'
-            },
-            {
-                value: 'Feeding 3 Meals',
-                label: 'Feeding 3 Meals'
-            },
-            {
-                value: 'Breakages & Maintenance',
-                label: 'Breakages & Maintenance'
-            }
-        ];
+        // All existing items of selected fee structure
+        var feeStructureExistingItems = [];
+
+        var ALL_FEE_ITEMS = [];
 
         // Track selected fee types
-        let selectedFeeTypes = new Set();
+        let selectedFeeItems = new Set();
 
         // Counter for generating unique IDs
         let itemCounter = 0;
 
         // Function to get available fee types (excluding selected ones)
-        function getAvailableFeeTypes() {
-            return ALL_FEE_ITEMS.filter(feeType => !selectedFeeTypes.has(feeType.value));
+        function getAvailableFeeItems() {
+            return ALL_FEE_ITEMS.filter(feeItem => !selectedFeeItems.has(feeItem.value));
         }
 
         // Function to create fee type options HTML
-        function createFeeTypeOptions(selectedValue = '') {
-            const availableTypes = getAvailableFeeTypes();
-            let options = '<option value="">Select Fee Type</option>';
+        function createFeeItemOptions(selectedValue = '') {
+            const availableTypes = getAvailableFeeItems();
+            let options = '<option value="">Select Fee Item</option>';
 
             // If a selectedValue is provided, always include it in the options
             // This ensures the current value shows in its own dropdown
-            const selectedType = ALL_FEE_ITEMS.find(type => type.value === selectedValue);
-            if (selectedValue && selectedType) {
-                options += `<option value="${selectedType.value}" selected>${selectedType.name}</option>`;
+            const selectedItem = ALL_FEE_ITEMS.find(item => item.value === selectedValue);
+            if (selectedValue && selectedItem) {
+                options += `<option value="${selectedItem.value}" selected>${selectedItem.label}</option>`;
             }
 
             // Add all other available types
-            availableTypes.forEach(type => {
-                if (type.value !== selectedValue) {
-                    options += `<option value="${type.value}">${type.name}</option>`;
+            availableTypes.forEach(item => {
+                if (item.value !== selectedValue) {
+                    options += `<option value="${item.value}">${item.label}</option>`;
                 }
             });
 
@@ -1228,18 +1191,18 @@ require_once('../inc/page-data.php');
         }
 
         // Function to handle fee type selection change
-        function handleFeeTypeChange(select) {
+        function handleFeeItemChange(select) {
             const oldValue = select.dataset.previousValue;
             const newValue = select.value;
 
             // Remove old value from selected set if it exists
             if (oldValue) {
-                selectedFeeTypes.delete(oldValue);
+                selectedFeeItems.delete(oldValue);
             }
 
             // Add new value to selected set if it's not empty
             if (newValue) {
-                selectedFeeTypes.add(newValue);
+                selectedFeeItems.add(newValue);
             }
 
             // Store the new value as previous value
@@ -1251,10 +1214,10 @@ require_once('../inc/page-data.php');
 
         // Function to update all empty fee type dropdowns
         function updateEmptyDropdowns() {
-            const allSelects = document.querySelectorAll('.fee-structure-item select[name="feeType"]');
+            const allSelects = document.querySelectorAll('.fee-structure-item select[name="feeItem"]');
             allSelects.forEach(select => {
                 if (!select.value) {
-                    select.innerHTML = createFeeTypeOptions();
+                    select.innerHTML = createFeeItemOptions();
                 }
             });
         }
@@ -1269,59 +1232,59 @@ require_once('../inc/page-data.php');
 
             // Create new fee item
             const itemId = `feeItem${itemCounter++}`;
-            const feeItem = document.createElement('div');
-            feeItem.className = 'fee-structure-item';
-            feeItem.id = itemId;
+            const feeItemDiv = document.createElement('div');
+            feeItemDiv.className = 'fee-structure-item';
+            feeItemDiv.id = itemId;
 
             // If we have existing data, use it to pre-populate the fields
-            const feeType = existingData ? existingData.fee_type : '';
+            const feeItem = existingData ? existingData.name : '';
             const memberAmount = existingData ? existingData.member_amount : '';
             const nonMemberAmount = existingData ? existingData.non_member_amount : '';
 
             // If this is an existing item, add the ID as a data attribute
             if (existingData && existingData.id) {
-                feeItem.dataset.itemId = existingData.id;
+                feeItemDiv.dataset.itemId = existingData.id;
             }
 
-            feeItem.innerHTML = `
-        <select name="feeType" required onchange="handleFeeTypeChange(this)">
-            ${createFeeTypeOptions(feeType)}
-        </select>
-        
-        <div class="amount-field">
-            <input type="number" 
-                   name="memberAmount" 
-                   placeholder="Member Amount" 
-                   step="0.01" 
-                   min="0" 
-                   required
-                   value="${memberAmount}">
-        </div>
-        
-        <div class="amount-field">
-            <input type="number" 
-                   name="nonMemberAmount" 
-                   placeholder="Non-Member Amount" 
-                   step="0.01" 
-                   min="0" 
-                   required
-                   value="${nonMemberAmount}">
-        </div>
-        
-        <button type="button" 
-                class="remove-item-btn" 
-                onclick="removeFeeStructureItem('${itemId}')">
-            <i class="fas fa-trash"></i>
-        </button>
-    `;
+            feeItemDiv.innerHTML = `
+                <select name="feeItem" required onchange="handleFeeItemChange(this)">
+                    ${createFeeItemOptions(feeItem)}
+                </select>
+                
+                <div class="amount-field">
+                    <input type="number" 
+                        name="memberAmount" 
+                        placeholder="Member Amount" 
+                        step="0.01" 
+                        min="0" 
+                        required
+                        value="${memberAmount}">
+                </div>
+                
+                <div class="amount-field">
+                    <input type="number" 
+                        name="nonMemberAmount" 
+                        placeholder="Non-Member Amount" 
+                        step="0.01" 
+                        min="0" 
+                        required
+                        value="${nonMemberAmount}">
+                </div>
+                
+                <button type="button" 
+                        class="remove-item-btn" 
+                        onclick="removeFeeStructureItem('${itemId}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            `;
 
-            feeItemsList.appendChild(feeItem);
+            feeItemsList.appendChild(feeItemDiv);
 
             // If we have a fee type, add it to selected types
-            if (feeType) {
-                selectedFeeTypes.add(feeType);
-                const select = feeItem.querySelector('select[name="feeType"]');
-                select.dataset.previousValue = feeType;
+            if (feeItem) {
+                selectedFeeItems.add(feeItem);
+                const select = feeItemDiv.querySelector('select[name="feeItem"]');
+                select.dataset.previousValue = feeItem;
             }
 
             updateFeeStructureItemsFormState();
@@ -1330,11 +1293,11 @@ require_once('../inc/page-data.php');
         // Function to remove a fee item
         function removeFeeStructureItem(itemId) {
             const item = document.getElementById(itemId);
-            const select = item.querySelector('select[name="feeType"]');
+            const select = item.querySelector('select[name="feeItem"]');
 
             // Remove the fee type from selected set
             if (select.value) {
-                selectedFeeTypes.delete(select.value);
+                selectedFeeItems.delete(select.value);
             }
 
             item.remove();
@@ -1351,52 +1314,35 @@ require_once('../inc/page-data.php');
             if (feeItemsList.children.length === 0) {
                 noItemsMessage.style.display = 'flex';
                 // Clear selected fee types when no items exist
-                selectedFeeTypes.clear();
+                selectedFeeItems.clear();
             } else {
                 noItemsMessage.style.display = 'none';
             }
         }
 
         // Function to set existing fee items from database response
-        function setExistingFeeStructureItems(response) {
+        function setExistingFeeStructureItems(data) {
             // Clear existing items first
             const feeItemsList = document.getElementById('feeItemsList');
             feeItemsList.innerHTML = '';
-            selectedFeeTypes.clear();
+            selectedFeeItems.clear();
 
             // Reset counter to ensure clean IDs
             itemCounter = 0;
 
-            // Add each existing item
-            if (response.success && response.data) {
-                response.data.forEach(item => {
-                    // Format the data for addFeeStructureItem function
-                    const formattedItem = {
-                        id: item.id,
-                        fee_type: determineFeeType(item), // You'll need to implement this based on your data structure
-                        member_amount: item.member_amount,
-                        non_member_amount: item.non_member_amount
-                    };
-
-                    addFeeStructureItem(formattedItem);
-                });
-            }
+            data.forEach(item => {
+                const formattedItem = {
+                    id: item.id,
+                    name: item.name,
+                    member_amount: item.member_amount,
+                    non_member_amount: item.non_member_amount
+                };
+                feeStructureExistingItems.push(formattedItem);
+                addFeeStructureItem(formattedItem);
+            });
 
             updateFeeStructureItemsFormState();
             updateEmptyDropdowns();
-        }
-
-        // Helper function to determine fee type from database item
-        // You'll need to modify this based on your actual data structure
-        function determineFeeType(item) {
-            const typeMapping = {
-                1: 'tuition',
-                2: 'library',
-                3: 'laboratory',
-                4: 'sports',
-                5: 'medical'
-            };
-            return typeMapping[item.fee_type_id];
         }
 
         // Function to collect form data (call this when saving)
@@ -1406,7 +1352,7 @@ require_once('../inc/page-data.php');
 
             feeItems.forEach(item => {
                 const formItem = {
-                    feeType: item.querySelector('select[name="feeType"]').value,
+                    name: item.querySelector('select[name="feeItem"]').value,
                     memberAmount: parseFloat(item.querySelector('input[name="memberAmount"]').value),
                     nonMemberAmount: parseFloat(item.querySelector('input[name="nonMemberAmount"]').value)
                 };
@@ -1430,10 +1376,15 @@ require_once('../inc/page-data.php');
         async function loadFeeItems() {
             try {
                 const response = await fetch(`../endpoint/fetch-fee-item`);
-                const data = await response.json();
-                console.log("fee items", data);
-                ALL_FEE_ITEMS = data.data;
-                console.log(ALL_FEE_ITEMS)
+                const jsonData = await response.json();
+                jsonData.data.forEach(item => {
+                    const formattedItem = {
+                        value: item.name,
+                        label: item.name,
+                    };
+                    ALL_FEE_ITEMS.push(formattedItem);
+                });
+                console.log("loaded items", ALL_FEE_ITEMS);
             } catch (error) {
                 console.error('Error loading fee structure:', error);
             }
@@ -1443,12 +1394,11 @@ require_once('../inc/page-data.php');
             try {
                 const response = await fetch(`../endpoint/fetch-fee-structure-category`);
                 const data = await response.json();
-                console.log("fee structure category", data);
-                let options = '<option value="">Select Fee Category</option>';
-                // data.forEach(item => {
-                //     options += `<option value="${item.name}" selected>${item.name}</option>`;
-                // });
-                // document.querySelector("#category").innerHTML = options;
+                let options = '<option value="">Select</option>';
+                data.data.forEach(item => {
+                    options += `<option value="${item.name}">${item.name}</option>`;
+                });
+                document.querySelector("#category").innerHTML = options;
             } catch (error) {
                 console.error('Error loading fee structure:', error);
             }
@@ -1458,14 +1408,44 @@ require_once('../inc/page-data.php');
             try {
                 const response = await fetch(`../endpoint/fetch-fee-structure-type`);
                 const data = await response.json();
-                console.log("fee structure type", data);
-                let options = '<option value="">Select Fee Type</option>';
-                // data.forEach(item => {
-                //     options += `<option value="${item.name}" selected>${item.name}</option>`;
-                // });
-                // document.querySelector("#type").innerHTML = options;
+                let options = '<option value="">Select</option>';
+                data.data.forEach(item => {
+                    options += `<option value="${item.name}">${item.name}</option>`;
+                });
+                document.querySelector("#type").innerHTML = options;
             } catch (error) {
                 console.error('Error loading fee structure:', error);
+            }
+        }
+
+        async function submitFeeStructureData(formData) {
+            const button = document.querySelector(".addFeeStructure-btn");
+
+            try {
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Uploading...';
+
+                const response = await fetch("../endpoint/add-fee-structure-item", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const result = await response.json();
+                console.log(result);
+
+                if (result.success) {
+                    alert(result.message);
+                    closeModal("addFeeStructureModal");
+                    location.reload();
+                } else {
+                    alert(result.message);
+                }
+            } catch (error) {
+                alert('Error: Internal server error!');
+            } finally {
+                // Enable button and restore text
+                button.disabled = false;
+                button.innerHTML = 'Upload';
             }
         }
 
@@ -1483,11 +1463,10 @@ require_once('../inc/page-data.php');
                 var feeItems = collectFormData();
                 var feeStructure = document.querySelector('#add-item-fee_structure').value;
                 var formData = {
-                    "fee_structure": feeStructure,
-                    "items": feeItems
+                    fee_structure: feeStructure,
+                    items: feeItems,
+                    existing_items: feeStructureExistingItems
                 };
-
-                console.log(formData);
 
                 // Set up ajax request
                 $.ajax({
@@ -1596,10 +1575,9 @@ require_once('../inc/page-data.php');
                     url: "../endpoint/fetch-fee-structure-item",
                     data: formData,
                     success: function(result) {
-                        console.log(result);
                         if (result.success) {
                             if (result.data) {
-                                setExistingFeeStructureItems(result);
+                                setExistingFeeStructureItems(result.data);
                                 updateFeeStructureItemsFormState();
                                 openaddFeeStructureItemsModal();
                             } else {
@@ -1624,7 +1602,6 @@ require_once('../inc/page-data.php');
 
             $(document).on("click", ".edit-btn", function(e) {
                 const fee_structure = $(this).attr('id');
-
                 const formData = {
                     "fee_structure": fee_structure
                 };
@@ -1650,7 +1627,7 @@ require_once('../inc/page-data.php');
                         }
                     },
                     error: function(error) {
-                        console.log("error area: ", error);
+                        console.error("error area: ", error);
                         alert("An error occurred while processing your request.");
                     }
                 });
@@ -1685,11 +1662,33 @@ require_once('../inc/page-data.php');
                         }
                     },
                     error: function(error) {
-                        console.log("error area: ", error);
+                        console.error("error area: ", error);
                         alert("An error occurred while processing your request.");
                     }
                 });
             });
+
+        });
+
+        // Toggle sidebar
+        const toggleButtons = document.querySelectorAll('.toggle-sidebar');
+        const sidebar = document.querySelector('.sidebar');
+
+        toggleButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.toggle('active');
+                }
+            });
+        });
+
+        // Responsive sidebar behavior
+        window.addEventListener('resize', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('collapsed');
+                sidebar.classList.remove('active');
+            }
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js"></script>
