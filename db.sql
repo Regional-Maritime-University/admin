@@ -99,14 +99,21 @@ CREATE TABLE `fee_structure` (
     `type` VARCHAR(15) NOT NULL,
     `category` VARCHAR(15) NOT NULL,
     `name` VARCHAR(100) NOT NULL,
+    `member_amount` DECIMAL(10,2) NOT NULL,
+    `non_member_amount` DECIMAL(10,2) NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `archived` TINYINT(1) DEFAULT 0,
     FOREIGN KEY (`fk_program_id`) REFERENCES `programs`(`id`)
 );
+ALTER TABLE `fee_structure` 
+ADD COLUMN `member_amount` DECIMAL(10,2) AFTER `name`,
+ADD COLUMN `non_member_amount` DECIMAL(10,2) AFTER `member_amount`;
 CREATE INDEX fee_structure_type_idx1 ON `fee_structure` (`type`);
 CREATE INDEX fee_structure_category_idx1 ON `fee_structure` (`category`);
 CREATE INDEX fee_structure_name_idx1 ON `fee_structure` (`name`);
+CREATE INDEX fee_structure_member_amount_idx1 ON `fee_structure` (`member_amount`);
+CREATE INDEX fee_structure_non_member_amount_idx1 ON `fee_structure` (`non_member_amount`);
 CREATE INDEX fee_structure_created_at_idx1 ON `fee_structure` (`created_at`);
 CREATE INDEX fee_structure_updated_at_idx1 ON `fee_structure` (`updated_at`);
 CREATE INDEX fee_structure_archived_idx1 ON `fee_structure` (`archived`);

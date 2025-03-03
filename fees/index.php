@@ -1023,7 +1023,7 @@ require_once('../inc/page-data.php');
                                 </select>
                             </div>
                         </div>
-                        <!-- <div class="input-group">
+                        <div class="input-group">
                             <div class="form-group me-2">
                                 <label for="member_amount">Member Amount</label>
                                 <input type="number" name="member_amount" min="0.00" id="member_amount" value="0.00" required>
@@ -1032,7 +1032,7 @@ require_once('../inc/page-data.php');
                                 <label for="non_member_amount">Non Member Amount</label>
                                 <input type="number" name="non_member_amount" min="0.00" id="non_member_amount" value="0.00" required>
                             </div>
-                        </div> -->
+                        </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" onclick="closeModal('addFeeStructureModal')">Cancel</button>
                             <button type="submit" class="btn btn-primary addFeeStructure-btn">Add</button>
@@ -1087,6 +1087,16 @@ require_once('../inc/page-data.php');
                                     <option value="weekend">WEEKEND</option>
                                     <option value="regular">REGULAR</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="form-group me-2">
+                                <label for="edit-member_amount">Member Amount</label>
+                                <input type="number" name="member_amount" min="0.00" id="edit-member_amount" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-non_member_amount">Non Member Amount</label>
+                                <input type="number" name="non_member_amount" min="0.00" id="edit-non_member_amount" required>
                             </div>
                         </div>
                         <div class="modal-footer">

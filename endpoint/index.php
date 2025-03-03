@@ -362,6 +362,12 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         if (!isset($_POST["category"]) || empty($_POST["category"])) {
             die(json_encode(array("success" => false, "message" => "Fee category is required!")));
         }
+        if (!isset($_POST["member_amount"]) || empty($_POST["member_amount"])) {
+            die(json_encode(array("success" => false, "message" => "Member amount is required!")));
+        }
+        if (!isset($_POST["non_member_amount"]) || empty($_POST["non_member_amount"])) {
+            die(json_encode(array("success" => false, "message" => "Non member amount is required!")));
+        }
         die(json_encode($fee_structure->add($_POST)));
     } elseif ($_GET["url"] == "update-fee-structure") {
         if (!isset($_POST["fee_structure"]) || empty($_POST["fee_structure"])) {
