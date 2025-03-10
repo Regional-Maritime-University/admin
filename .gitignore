@@ -5,3 +5,4 @@ downloads/*
 cacert.pem
 composer.lock
 .env
+/upload

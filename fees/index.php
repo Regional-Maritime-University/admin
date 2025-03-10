@@ -842,6 +842,42 @@ require_once('../inc/page-data.php');
             --bs-tooltip-bg: var(--primary-color);
             --bs-tooltip-color: var(--text-color);
         }
+
+        .pdf-file-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .pdf-file-preview {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .existing-file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #pdf-filename {
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #change-pdf-btn {
+            margin-left: 10px;
+        }
+
+        .pdf-icon {
+            margin-right: 10px;
+            color: #dc3545;
+        }
     </style>
     <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/vendor/bootstrap-icons/bootstrap-icons.css">
@@ -968,7 +1004,7 @@ require_once('../inc/page-data.php');
             </div>
         </div>
 
-        <!-- Add New Staff Modal -->
+        <!-- Add New Fee Structure Modal -->
         <div class="modal" id="addFeeStructureModal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -997,8 +1033,8 @@ require_once('../inc/page-data.php');
                                 <option value="GHS">GHS</option>
                             </select>
                         </div>
-                        <div class="input-group">
-                            <div class="form-group col-5 me-2">
+                        <div style="display: flex; justify-content:space-between;">
+                            <div class="form-group" style="width: 49%">
                                 <label for="type">Type</label>
                                 <select id="type" name="type" required>
                                     <option value="">Select</option>
@@ -1006,7 +1042,7 @@ require_once('../inc/page-data.php');
                                     <option value="topup">TOPUP</option>
                                 </select>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group" style="width: 49%">
                                 <label for="category">Category</label>
                                 <select id="category" name="category" required>
                                     <option value="">Select</option>
@@ -1023,12 +1059,16 @@ require_once('../inc/page-data.php');
                                 </select>
                             </div>
                         </div>
-                        <div class="input-group">
-                            <div class="form-group me-2">
+                        <div class="form-group">
+                            <label for="fee_file">Fee File</label>
+                            <input type="file" name="fee_file" id="fee_file">
+                        </div>
+                        <div style="display: flex; justify-content:space-between;">
+                            <div class="form-group" style="width: 49%">
                                 <label for="member_amount">Member Amount</label>
                                 <input type="number" name="member_amount" min="0.00" id="member_amount" value="0.00" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="width: 49%">
                                 <label for="non_member_amount">Non Member Amount</label>
                                 <input type="number" name="non_member_amount" min="0.00" id="non_member_amount" value="0.00" required>
                             </div>
@@ -1042,7 +1082,7 @@ require_once('../inc/page-data.php');
             </div>
         </div>
 
-        <!-- Edit Staff Modal -->
+        <!-- Edit Fee Structure Modal -->
         <div class="modal" id="editFeeStructureModal">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -1071,8 +1111,8 @@ require_once('../inc/page-data.php');
                                 <option value="GHS">GHS</option>
                             </select>
                         </div>
-                        <div class="input-group">
-                            <div class="form-group col-5 me-2">
+                        <div style="display: flex; justify-content:space-between;">
+                            <div class="form-group" style="width: 49%">
                                 <label for="edit-type">Type</label>
                                 <select id="edit-type" name="type" required>
                                     <option value="">Select</option>
@@ -1080,7 +1120,7 @@ require_once('../inc/page-data.php');
                                     <option value="topup">TOPUP</option>
                                 </select>
                             </div>
-                            <div class="form-group col-6">
+                            <div class="form-group" style="width: 49%">
                                 <label for="edit-category">Category</label>
                                 <select id="edit-category" name="category" required>
                                     <option value="">Select</option>
@@ -1089,12 +1129,23 @@ require_once('../inc/page-data.php');
                                 </select>
                             </div>
                         </div>
-                        <div class="input-group">
-                            <div class="form-group me-2">
+                        <!-- HTML Addition to the Existing Form -->
+                        <div class="form-group pdf-file-container">
+                            <label for="edit-fee_file">Fee File</label>
+                            <div class="pdf-file-preview">
+                                <div id="existing-pdf-info" class="existing-file-info">
+                                    <span id="pdf-filename">No PDF file uploaded</span>
+                                    <button type="button" id="change-pdf-btn" class="btn btn-secondary btn-sm">Change File</button>
+                                </div>
+                                <input type="file" name="fee_file" id="edit-fee_file" accept=".pdf" style="display: none;" onchange="handlePdfFileChange(event)">
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content:space-between;">
+                            <div class="form-group" style="width: 49%">
                                 <label for="edit-member_amount">Member Amount</label>
                                 <input type="number" name="member_amount" min="0.00" id="edit-member_amount" required>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="width: 49%">
                                 <label for="edit-non_member_amount">Non Member Amount</label>
                                 <input type="number" name="non_member_amount" min="0.00" id="edit-non_member_amount" required>
                             </div>
@@ -1148,15 +1199,15 @@ require_once('../inc/page-data.php');
             openModal('uploadFeeStructureModal');
         }
 
-        function setEditFormData(data) {
-            $("#edit-fee_structure").val(data.id);
-            $("#edit-program").val(data.program_id);
-            $("#edit-currency").val(data.currency);
-            $("#edit-type").val(data.type);
-            $("#edit-category").val(data.category);
-            $("#edit-member_amount").val(data.member_amount);
-            $("#edit-non_member_amount").val(data.non_member_amount);
-        }
+        // function setEditFormData(data) {
+        //     $("#edit-fee_structure").val(data.id);
+        //     $("#edit-program").val(data.program_id);
+        //     $("#edit-currency").val(data.currency);
+        //     $("#edit-type").val(data.type);
+        //     $("#edit-category").val(data.category);
+        //     $("#edit-member_amount").val(data.member_amount);
+        //     $("#edit-non_member_amount").val(data.non_member_amount);
+        // }
 
         function setFeeStructureItemsFormData(data) {
             $("#add-item-fee_structure").val(data);
@@ -1459,6 +1510,33 @@ require_once('../inc/page-data.php');
             }
         }
 
+        // Function to handle PDF file change
+        function handlePdfFileChange(event) {
+            const fileInput = event.target;
+            const pdfFilename = document.getElementById('pdf-filename');
+            const file = fileInput.files[0];
+
+            if (file) {
+                // Check if it's a PDF
+                if (file.type === 'application/pdf') {
+                    pdfFilename.textContent = file.name;
+                    pdfFilename.classList.remove('text-danger');
+                } else {
+                    // Reset if not a PDF
+                    fileInput.value = ''; // Clear the file input
+                    pdfFilename.textContent = 'Invalid file type. Please select a PDF.';
+                    pdfFilename.classList.add('text-danger');
+                }
+            } else {
+                pdfFilename.textContent = 'No PDF file uploaded';
+            }
+        }
+
+        // Function to trigger file input when "Change File" is clicked
+        document.getElementById('change-pdf-btn').addEventListener('click', function() {
+            document.getElementById('edit-fee_file').click();
+        });
+
         $(document).ready(function() {
 
             loadFeeStructureTypes();
@@ -1468,7 +1546,6 @@ require_once('../inc/page-data.php');
             $("#addFeeStructureItemsForm").on("submit", function(e) {
 
                 e.preventDefault();
-
                 // Create a new FormData object
                 var feeItems = collectFormData();
                 var feeStructure = document.querySelector('#add-item-fee_structure').value;

@@ -348,10 +348,25 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
     // fee structure
     elseif ($_GET["url"] == "fetch-fee-structure") {
-        if (!isset($_POST["fee_structure"]) || empty($_POST["fee_structure"])) {
-            die(json_encode(array("success" => false, "message" => "Fee structure is required!")));
+        if (isset($_POST["fee_structure"]) && !empty($_POST["fee_structure"])) {
+            $_POST["key"] = "id";
+            $_POST["value"] = $_POST["fee_structure"];
+        } else if (isset($_POST["program"]) && !empty($_POST["program"])) {
+            $_POST["key"] = "program";
+            $_POST["value"] = $_POST["program"];
+        } else if (isset($_POST["category"]) && !empty($_POST["category"])) {
+            $_POST["key"] = "category";
+            $_POST["value"] = $_POST["category"];
+        } else if (isset($_POST["type"]) && !empty($_POST["type"])) {
+            $_POST["key"] = "type";
+            $_POST["value"] = $_POST["type"];
+        } else if (isset($_POST["name"]) && !empty($_POST["name"])) {
+            $_POST["key"] = "name";
+            $_POST["value"] = $_POST["name"];
+        } else {
+            die(json_encode(array("success" => false, "message" => "Missing a required input!")));
         }
-        die(json_encode(array("success" => true, "data" => $fee_structure->fetch("id", $_POST["fee_structure"]))));
+        die(json_encode(array("success" => true, "data" => $fee_structure->fetch($_POST["key"], $_POST["value"]))));
     } elseif ($_GET["url"] == "add-fee-structure") {
         if (!isset($_POST["program"]) || empty($_POST["program"])) {
             die(json_encode(array("success" => false, "message" => "Program is required!")));
@@ -368,7 +383,53 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         if (!isset($_POST["non_member_amount"]) || empty($_POST["non_member_amount"])) {
             die(json_encode(array("success" => false, "message" => "Non member amount is required!")));
         }
-        die(json_encode($fee_structure->add($_POST)));
+
+        if (!isset($_FILES["fee_file"]) || empty($_FILES["fee_file"])) {
+            die(json_encode(array("success" => false, "message" => "Fee file is required!")));
+        }
+
+        if ($_FILES["fee_file"]['error'] !== UPLOAD_ERR_OK) {
+            $error_message = "File upload error: ";
+            switch ($_FILES["fee_file"]['error']) {
+                case UPLOAD_ERR_INI_SIZE:
+                    $error_message .= "The uploaded file exceeds the upload_max_filesize directive in php.ini";
+                    break;
+                case UPLOAD_ERR_FORM_SIZE:
+                    $error_message .= "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form";
+                    break;
+                case UPLOAD_ERR_PARTIAL:
+                    $error_message .= "The uploaded file was only partially uploaded";
+                    break;
+                case UPLOAD_ERR_NO_FILE:
+                    $error_message .= "No file was uploaded";
+                    break;
+                case UPLOAD_ERR_NO_TMP_DIR:
+                    $error_message .= "Missing a temporary folder";
+                    break;
+                case UPLOAD_ERR_CANT_WRITE:
+                    $error_message .= "Failed to write file to disk";
+                    break;
+                case UPLOAD_ERR_EXTENSION:
+                    $error_message .= "File upload stopped by extension";
+                    break;
+                default:
+                    $error_message .= "Unknown upload error";
+                    break;
+            }
+            die(json_encode(array("success" => false, "message" => $error_message)));
+        }
+
+        if (!in_array($_FILES["fee_file"]['type'], ['application/pdf', 'application/x-pdf'])) {
+            die(json_encode(array("success" => false, "message" => "Only PDF files are allowed!")));
+        }
+
+        // File size validation (limit to 10MB)
+        $max_size = 10 * 1024 * 1024; // 10MB in bytes
+        if ($_FILES["fee_file"]['size'] > $max_size) {
+            die(json_encode(array("success" => false, "message" => "File size exceeds maximum limit of 10MB!")));
+        }
+
+        die(json_encode($fee_structure->add($_POST, $_FILES["fee_file"])));
     } elseif ($_GET["url"] == "update-fee-structure") {
         if (!isset($_POST["fee_structure"]) || empty($_POST["fee_structure"])) {
             die(json_encode(array("success" => false, "message" => "Fee structure is required!")));
@@ -405,10 +466,28 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
 
     // Fee Items
     elseif ($_GET["url"] == "fetch-fee-structure-item") {
-        if (!isset($_POST["fee_structure"]) || empty($_POST["fee_structure"])) {
-            die(json_encode(array("success" => false, "message" => "Fee structure is required!")));
+        if (isset($_POST["fee_item"]) && !empty($_POST["fee_item"])) {
+            $_POST["key"] = "id";
+            $_POST["value"] = $_POST["fee_item"];
+        } else if (isset($_POST["fee_structure"]) && !empty($_POST["fee_structure"])) {
+            $_POST["key"] = "fee";
+            $_POST["value"] = $_POST["fee_structure"];
+        } else if (isset($_POST["program"]) && !empty($_POST["program"])) {
+            $_POST["key"] = "program";
+            $_POST["value"] = $_POST["program"];
+        } else if (isset($_POST["category"]) && !empty($_POST["category"])) {
+            $_POST["key"] = "category";
+            $_POST["value"] = $_POST["category"];
+        } else if (isset($_POST["type"]) && !empty($_POST["type"])) {
+            $_POST["key"] = "type";
+            $_POST["value"] = $_POST["type"];
+        } else if (isset($_POST["name"]) && !empty($_POST["name"])) {
+            $_POST["key"] = "name";
+            $_POST["value"] = $_POST["name"];
+        } else {
+            die(json_encode(array("success" => false, "message" => "Missing a required input!")));
         }
-        die(json_encode(array("success" => true, "data" => $fee_structure_item->fetch("fee", $_POST["fee_structure"]))));
+        die(json_encode(array("success" => true, "data" => $fee_structure_item->fetch($_POST["key"], $_POST["value"]))));
     } elseif ($_GET["url"] == "add-fee-structure-item") {
         if (!isset($_POST["fee_structure"]) || empty($_POST["fee_structure"])) {
             die(json_encode(array("success" => false, "message" => "Fee structure is required!")));

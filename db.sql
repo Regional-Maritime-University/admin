@@ -118,6 +118,9 @@ CREATE INDEX fee_structure_created_at_idx1 ON `fee_structure` (`created_at`);
 CREATE INDEX fee_structure_updated_at_idx1 ON `fee_structure` (`updated_at`);
 CREATE INDEX fee_structure_archived_idx1 ON `fee_structure` (`archived`);
 
+ALTER TABLE `fee_structure` ADD COLUMN `file` VARCHAR(255) DEFAULT NULL AFTER `non_member_amount`;
+CREATE INDEX fee_structure_item_file_idx1 ON `fee_structure_item` (`file`);
+
 CREATE TABLE `fee_structure_item` (
     `id` INT PRIMARY KEY AUTO_INCREMENT,
     `currency` VARCHAR(5) DEFAULT 'USD',

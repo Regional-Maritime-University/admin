@@ -20,8 +20,28 @@ class FeeStructureItem
     public function fetch(string $key = "", string $value = "", bool $archived = false)
     {
         switch ($key) {
+            case 'id':
+                $concat_stmt = "AND fi.`id` = :v";
+                break;
+
             case 'fee':
                 $concat_stmt = "AND fs.`id` = :v";
+                break;
+
+            case 'type':
+                $concat_stmt = "AND fs.`type` = :v";
+                break;
+
+            case 'category':
+                $concat_stmt = "AND fs.`category` = :v";
+                break;
+
+            case 'name':
+                $concat_stmt = "AND fs.`name` = :v";
+                break;
+
+            case 'program':
+                $concat_stmt = "AND pg.`id` = :v";
                 break;
 
             default:
@@ -30,8 +50,9 @@ class FeeStructureItem
         }
 
         $query = "SELECT fi.`id`, fi.name, fi.`member_amount`, fi.`non_member_amount` 
-                FROM `fee_structure_item` AS fi, `fee_structure` AS fs 
-                WHERE fi.`fk_fee_structure` = fs.`id` AND fi.`archived` = :ar $concat_stmt ORDER BY fi.`id` DESC";
+                FROM `fee_structure_item` AS fi, `fee_structure` AS fs, `programs` AS pg 
+                WHERE pg.`id` = fs.`fk_program_id` AND fi.`fk_fee_structure` = fs.`id` 
+                AND fi.`archived` = :ar $concat_stmt ORDER BY fi.`id` DESC";
         $params = $value ? array(":v" => $value, ":ar" => $archived) : array(":ar" => $archived);
         return $this->dm->getData($query, $params);
     }
