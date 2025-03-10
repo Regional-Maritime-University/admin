@@ -55,7 +55,7 @@ class FeeStructure
         return $this->dm->getData($query, $params);
     }
 
-    public function add(array $data, $file)
+    public function add(array $data, $file = null)
     {
         // Check if the upload directory exists, if not create it
         $upload_dir = UPLOAD_DIR . "/fees/";
@@ -83,49 +83,66 @@ class FeeStructure
         $program = $this->dm->getData("SELECT `index_code` FROM `programs` WHERE `id` = :p", [":p" => $data["program"]]);
         $fee_structure_name = $program[0]["index_code"] . " - {$data["type"]}" . " [{$data["category"]}]";
 
-        if ($file['error'] == UPLOAD_ERR_OK) {
-            // More robust file type checking - check actual file content
-            $finfo = new finfo(FILEINFO_MIME_TYPE);
-            $mime_type = $finfo->file($file['tmp_name']);
+        if (!$file) {
+            $query = "INSERT INTO `fee_structure` 
+                        (`fk_program_id`, `currency`, `type`, `category`, `name`, `member_amount`, `non_member_amount`) 
+                        VALUES(:p, :r, :t, :c, :n, :ma, :nm)";
+            $params = array(
+                ":p" => $data["program"],
+                ":r" => $data["currency"],
+                ":t" => $data["type"],
+                ":c" => $data["category"],
+                ":ma" => $data["member_amount"],
+                ":nm" => $data["non_member_amount"],
+                ":n" => $fee_structure_name
+            );
+        } else {
 
-            if ($mime_type !== 'application/pdf') {
-                return array("success" => false, "message" => "The uploaded file is not a valid PDF!");
+            if ($file['error'] == UPLOAD_ERR_OK) {
+                // More robust file type checking - check actual file content
+                $finfo = new finfo(FILEINFO_MIME_TYPE);
+                $mime_type = $finfo->file($file['tmp_name']);
+
+                if ($mime_type !== 'application/pdf') {
+                    return array("success" => false, "message" => "The uploaded file is not a valid PDF!");
+                }
+
+                $file_name = $program[0]['index_code'] . '_' . $data["type"] . '_' . $data["category"] . '_fee.pdf';
+                $targetPath = $upload_dir . $file_name;
+
+                if (file_exists($targetPath)) {
+                    unlink($targetPath);
+                }
+
+                // Use binary safe file operations
+                if (!copy($file['tmp_name'], $targetPath)) {
+                    return array("success" => false, "message" => "Failed to upload file!");
+                }
+
+                // Set appropriate permissions
+                chmod($targetPath, 0644);
+
+                // Verify the file was written correctly
+                if (!file_exists($targetPath) || filesize($targetPath) != filesize($file['tmp_name'])) {
+                    return array("success" => false, "message" => "File upload verification failed!");
+                }
             }
 
-            $file_name = $program[0]['index_code'] . '_' . $data["type"] . '_' . $data["category"] . '_fee.pdf';
-            $targetPath = $upload_dir . $file_name;
-
-            if (file_exists($targetPath)) {
-                unlink($targetPath);
-            }
-
-            // Use binary safe file operations
-            if (!copy($file['tmp_name'], $targetPath)) {
-                return array("success" => false, "message" => "Failed to upload file!");
-            }
-
-            // Set appropriate permissions
-            chmod($targetPath, 0644);
-
-            // Verify the file was written correctly
-            if (!file_exists($targetPath) || filesize($targetPath) != filesize($file['tmp_name'])) {
-                return array("success" => false, "message" => "File upload verification failed!");
-            }
+            $query = "INSERT INTO `fee_structure` 
+                        (`fk_program_id`, `currency`, `type`, `category`, `name`, `file`, `member_amount`, `non_member_amount`) 
+                        VALUES(:p, :r, :t, :c, :n, :f, :ma, :nm)";
+            $params = array(
+                ":p" => $data["program"],
+                ":r" => $data["currency"],
+                ":t" => $data["type"],
+                ":c" => $data["category"],
+                ":ma" => $data["member_amount"],
+                ":nm" => $data["non_member_amount"],
+                ":n" => $fee_structure_name,
+                ":f" => $file_name
+            );
         }
 
-        $query = "INSERT INTO `fee_structure` 
-                (`fk_program_id`, `currency`, `type`, `category`, `name`, `file`, `member_amount`, `non_member_amount`) 
-                VALUES(:p, :r, :t, :c, :n, :f, :ma, :nm)";
-        $params = array(
-            ":p" => $data["program"],
-            ":r" => $data["currency"],
-            ":t" => $data["type"],
-            ":c" => $data["category"],
-            ":ma" => $data["member_amount"],
-            ":nm" => $data["non_member_amount"],
-            ":n" => $fee_structure_name,
-            ":f" => $file_name
-        );
         $query_result = $this->dm->inputData($query, $params);
         if ($query_result) {
             $this->log->activity($_SESSION["user"], "INSERT", "Added new fee structure {$fee_structure_name}");

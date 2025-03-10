@@ -385,51 +385,56 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         }
 
         if (!isset($_FILES["fee_file"]) || empty($_FILES["fee_file"])) {
-            die(json_encode(array("success" => false, "message" => "Fee file is required!")));
-        }
+            die(json_encode($fee_structure->add($_POST)));
+        } else {
 
-        if ($_FILES["fee_file"]['error'] !== UPLOAD_ERR_OK) {
-            $error_message = "File upload error: ";
-            switch ($_FILES["fee_file"]['error']) {
-                case UPLOAD_ERR_INI_SIZE:
-                    $error_message .= "The uploaded file exceeds the upload_max_filesize directive in php.ini";
-                    break;
-                case UPLOAD_ERR_FORM_SIZE:
-                    $error_message .= "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form";
-                    break;
-                case UPLOAD_ERR_PARTIAL:
-                    $error_message .= "The uploaded file was only partially uploaded";
-                    break;
-                case UPLOAD_ERR_NO_FILE:
-                    $error_message .= "No file was uploaded";
-                    break;
-                case UPLOAD_ERR_NO_TMP_DIR:
-                    $error_message .= "Missing a temporary folder";
-                    break;
-                case UPLOAD_ERR_CANT_WRITE:
-                    $error_message .= "Failed to write file to disk";
-                    break;
-                case UPLOAD_ERR_EXTENSION:
-                    $error_message .= "File upload stopped by extension";
-                    break;
-                default:
-                    $error_message .= "Unknown upload error";
-                    break;
+            if ((isset($_FILES["fee_file"]) && !empty($_FILES["fee_file"]))) {
+
+                if ($_FILES["fee_file"]['error'] !== UPLOAD_ERR_OK) {
+                    $error_message = "File upload error: ";
+                    switch ($_FILES["fee_file"]['error']) {
+                        case UPLOAD_ERR_INI_SIZE:
+                            $error_message .= "The uploaded file exceeds the upload_max_filesize directive in php.ini";
+                            break;
+                        case UPLOAD_ERR_FORM_SIZE:
+                            $error_message .= "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form";
+                            break;
+                        case UPLOAD_ERR_PARTIAL:
+                            $error_message .= "The uploaded file was only partially uploaded";
+                            break;
+                        case UPLOAD_ERR_NO_FILE:
+                            $error_message .= "No file was uploaded";
+                            break;
+                        case UPLOAD_ERR_NO_TMP_DIR:
+                            $error_message .= "Missing a temporary folder";
+                            break;
+                        case UPLOAD_ERR_CANT_WRITE:
+                            $error_message .= "Failed to write file to disk";
+                            break;
+                        case UPLOAD_ERR_EXTENSION:
+                            $error_message .= "File upload stopped by extension";
+                            break;
+                        default:
+                            $error_message .= "Unknown upload error";
+                            break;
+                    }
+                    die(json_encode(array("success" => false, "message" => $error_message)));
+                }
+
+                if (!in_array($_FILES["fee_file"]['type'], ['application/pdf', 'application/x-pdf'])) {
+                    die(json_encode(array("success" => false, "message" => "Only PDF files are allowed!")));
+                }
+
+                // File size validation (limit to 10MB)
+                $max_size = 10 * 1024 * 1024; // 10MB in bytes
+                if ($_FILES["fee_file"]['size'] > $max_size) {
+                    die(json_encode(array("success" => false, "message" => "File size exceeds maximum limit of 10MB!")));
+                }
+                die(json_encode($fee_structure->add($_POST, $_FILES["fee_file"])));
+            } else {
+                die(json_encode(array("success" => false, "message" => "Fee file is required!")));
             }
-            die(json_encode(array("success" => false, "message" => $error_message)));
         }
-
-        if (!in_array($_FILES["fee_file"]['type'], ['application/pdf', 'application/x-pdf'])) {
-            die(json_encode(array("success" => false, "message" => "Only PDF files are allowed!")));
-        }
-
-        // File size validation (limit to 10MB)
-        $max_size = 10 * 1024 * 1024; // 10MB in bytes
-        if ($_FILES["fee_file"]['size'] > $max_size) {
-            die(json_encode(array("success" => false, "message" => "File size exceeds maximum limit of 10MB!")));
-        }
-
-        die(json_encode($fee_structure->add($_POST, $_FILES["fee_file"])));
     } elseif ($_GET["url"] == "update-fee-structure") {
         if (!isset($_POST["fee_structure"]) || empty($_POST["fee_structure"])) {
             die(json_encode(array("success" => false, "message" => "Fee structure is required!")));
