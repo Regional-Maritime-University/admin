@@ -1,16 +1,18 @@
 <?php
 session_start();
 
-if (!isset($_SESSION["adminLogSuccess"]) || $_SESSION["adminLogSuccess"] == false || !isset($_SESSION["user"]) || empty($_SESSION["user"])) {
+if (! isset($_SESSION["adminLogSuccess"]) || $_SESSION["adminLogSuccess"] == false || ! isset($_SESSION["user"]) || empty($_SESSION["user"])) {
     header("Location: ../index.php");
 }
 
 $isUser = false;
-if (strtolower($_SESSION["role"]) == "admin" || strtolower($_SESSION["role"]) == "developers") $isUser = true;
+if (strtolower($_SESSION["role"]) == "admin" || strtolower($_SESSION["role"]) == "developers") {
+    $isUser = true;
+}
 
-if (isset($_GET['logout']) || !$isUser) {
+if (isset($_GET['logout']) || ! $isUser) {
     session_destroy();
-    $_SESSION = array();
+    $_SESSION = [];
     if (ini_get("session.use_cookies")) {
         $params = session_get_cookie_params();
         setcookie(
@@ -27,29 +29,29 @@ if (isset($_GET['logout']) || !$isUser) {
     header('Location: ../' . $_SESSION["role"] . '/index.php');
 }
 
-if (!isset($_SESSION["_shortlistedFormToken"])) {
-    $rstrong = true;
+if (! isset($_SESSION["_shortlistedFormToken"])) {
+    $rstrong                           = true;
     $_SESSION["_shortlistedFormToken"] = hash('sha256', bin2hex(openssl_random_pseudo_bytes(64, $rstrong)));
-    $_SESSION["vendor_type"] = "VENDOR";
+    $_SESSION["vendor_type"]           = "VENDOR";
 }
 
 $_SESSION["lastAccessed"] = time();
 
-require_once('../bootstrap.php');
+require_once '../bootstrap.php';
 
 use Src\Controller\AdminController;
 use Src\Core\Base;
 use Src\Core\FeeItem;
 use Src\Core\FeeStructure;
 
-require_once('../inc/admin-database-con.php');
+require_once '../inc/admin-database-con.php';
 
-$admin = new AdminController($db, $user, $pass);
+$admin         = new AdminController($db, $user, $pass);
 $fee_structure = new FeeStructure($db, $user, $pass);
-$fee_item = new FeeItem($db, $user, $pass);
-$base = new Base($db, $user, $pass);
+$fee_item      = new FeeItem($db, $user, $pass);
+$base          = new Base($db, $user, $pass);
 
-require_once('../inc/page-data.php');
+require_once '../inc/page-data.php';
 
 ?>
 <!DOCTYPE html>
@@ -857,9 +859,20 @@ require_once('../inc/page-data.php');
             justify-content: space-between;
         }
 
-        .existing-file-info {
+        .pdf-file-preview {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
             display: flex;
             align-items: center;
+            justify-content: space-between;
+        }
+
+        .existing-file-info {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             gap: 15px;
         }
 
@@ -878,6 +891,75 @@ require_once('../inc/page-data.php');
             margin-right: 10px;
             color: #dc3545;
         }
+
+        /* PDF File Display Styling */
+        .pdf-file-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .pdf-file-name {
+            font-size: 14px;
+            color: #333;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pdf-view-icon {
+            color: #e74c3c;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .pdf-view-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* PDF Viewer Modal */
+        .pdf-viewer-modal {
+            display: none;
+            position: fixed;
+            z-index: 1100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .pdf-viewer-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            height: 90%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .pdf-viewer-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #e74c3c;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1110;
+        }
+
+        .pdf-viewer-iframe {
+            width: 100%;
+            height: calc(100% - 20px);
+            border: none;
+        }
     </style>
     <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../assets/vendor/bootstrap-icons/bootstrap-icons.css">
@@ -887,7 +969,7 @@ require_once('../inc/page-data.php');
 
 <body>
 
-    <?= require_once("../inc/navbar.php") ?>
+    <?php echo require_once "../inc/navbar.php" ?>
 
     <main id="main" class="main-content">
 
@@ -942,20 +1024,20 @@ require_once('../inc/page-data.php');
                             <tbody>
                                 <?php
                                 $fee_structure_list = $fee_structure->fetch();
-                                if (!empty($fee_structure_list) && is_array($fee_structure_list)) {
+                                if (! empty($fee_structure_list) && is_array($fee_structure_list)) {
                                     $index = 1;
                                     foreach ($fee_structure_list as $fs) {
                                 ?>
                                         <tr>
-                                            <td><?= $index ?></td>
-                                            <td><?= $fs["name"] ?></td>
-                                            <td><?= $fs["type"] ?></td>
-                                            <td><?= $fs["category"] ?></td>
-                                            <td><a href="program/info.php?d=<?= $fs["program_id"] ?>"><?= $fs["program_name"] ?></a></td>
+                                            <td><?php echo $index ?></td>
+                                            <td><?php echo $fs["name"] ?></td>
+                                            <td><?php echo $fs["type"] ?></td>
+                                            <td><?php echo $fs["category"] ?></td>
+                                            <td><a href="program/info.php?d=<?php echo $fs["program_id"] ?>"><?php echo $fs["program_name"] ?></a></td>
                                             <td>
-                                                <i id="<?= $fs["id"] ?>" class="fas fa-eye text-primary view-btn me-2" title="View"></i>
-                                                <i id="<?= $fs["id"] ?>" class="fas fa-edit text-warning edit-btn me-2" title="Edit"></i>
-                                                <i id="<?= $fs["id"] ?>" class="fas fa-archive text-danger archive-btn" title="Archive"></i>
+                                                <i id="<?php echo $fs["id"] ?>" class="fas fa-eye text-primary view-btn me-2" title="View"></i>
+                                                <i id="<?php echo $fs["id"] ?>" class="fas fa-edit text-warning edit-btn me-2" title="Edit"></i>
+                                                <i id="<?php echo $fs["id"] ?>" class="fas fa-archive text-danger archive-btn" title="Archive"></i>
                                             </td>
                                         </tr>
                                 <?php
@@ -1019,7 +1101,7 @@ require_once('../inc/page-data.php');
                                 $programs = $admin->fetchAllPrograms();
                                 foreach ($programs as $program) {
                                 ?>
-                                    <option value="<?= $program["id"] ?>"><?= $program["name"] ?></option>
+                                    <option value="<?php echo $program["id"] ?>"><?php echo $program["name"] ?></option>
                                 <?php
                                 }
                                 ?>
@@ -1052,7 +1134,7 @@ require_once('../inc/page-data.php');
                                     $programs = $admin->fetchAllPrograms();
                                     foreach ($programs as $program) {
                                     ?>
-                                        <option value="<?= $program["id"] ?>"><?= $program["name"] ?></option>
+                                        <option value="<?php echo $program["id"] ?>"><?php echo $program["name"] ?></option>
                                     <?php
                                     }
                                     ?>
@@ -1097,7 +1179,7 @@ require_once('../inc/page-data.php');
                                 $programs = $admin->fetchAllPrograms();
                                 foreach ($programs as $program) {
                                 ?>
-                                    <option value="<?= $program["id"] ?>"><?= $program["name"] ?></option>
+                                    <option value="<?php echo $program["id"] ?>"><?php echo $program["name"] ?></option>
                                 <?php
                                 }
                                 ?>
@@ -1105,7 +1187,7 @@ require_once('../inc/page-data.php');
                         </div>
                         <div class="form-group">
                             <label for="edit-currency">Currency</label>
-                            <select id="edit-currency" name="edit-currency" required>
+                            <select id="edit-currency" name="currency" required>
                                 <option value="">Select</option>
                                 <option value="USD">USD</option>
                                 <option value="GHS">GHS</option>
@@ -1129,12 +1211,14 @@ require_once('../inc/page-data.php');
                                 </select>
                             </div>
                         </div>
-                        <!-- HTML Addition to the Existing Form -->
                         <div class="form-group pdf-file-container">
                             <label for="edit-fee_file">Fee File</label>
                             <div class="pdf-file-preview">
                                 <div id="existing-pdf-info" class="existing-file-info">
-                                    <span id="pdf-filename">No PDF file uploaded</span>
+                                    <div class="pdf-file-info">
+                                        <span id="pdf-filename">No file uploaded</span>
+                                        <i class="fas fa-file-pdf pdf-view-icon" id="view-pdf-btn" style="display: none;" onclick="openPdfViewer()">Open</i>
+                                    </div>
                                     <button type="button" id="change-pdf-btn" class="btn btn-secondary btn-sm">Change File</button>
                                 </div>
                                 <input type="file" name="fee_file" id="edit-fee_file" accept=".pdf" style="display: none;" onchange="handlePdfFileChange(event)">
@@ -1152,6 +1236,8 @@ require_once('../inc/page-data.php');
                         </div>
                         <div class="modal-footer">
                             <input type="hidden" name="fee_structure" id="edit-fee_structure">
+                            <input type="hidden" name="file_existed" id="edit-file_existed" value="0">
+                            <input type="hidden" name="new_file_uploaded" id="edit-new_file_uploaded" value="0">
                             <button type="button" class="btn btn-secondary" onclick="closeModal('editFeeStructureModal')">Cancel</button>
                             <button type="submit" class="btn btn-primary editFeeStructure-btn">Save</button>
                         </div>
@@ -1160,9 +1246,18 @@ require_once('../inc/page-data.php');
             </div>
         </div>
 
+        <!-- PDF Viewer Modal -->
+        <div id="pdfViewerModal" class="pdf-viewer-modal">
+            <div class="pdf-viewer-content">
+                <span class="pdf-viewer-close" onclick="closePdfViewer()">&times;</span>
+                <iframe id="pdfViewerFrame" class="pdf-viewer-iframe" src=""></iframe>
+            </div>
+        </div>
+
     </main><!-- End #main -->
 
-    <?= require_once("../inc/footer-section.php") ?>
+    <?php require_once "../inc/footer-section.php" ?>
+
     <script>
         // Modal functions
         function openModal(modalId) {
@@ -1214,9 +1309,9 @@ require_once('../inc/page-data.php');
         }
 
         // All existing items of selected fee structure
-        var feeStructureExistingItems = [];
+        let feeStructureExistingItems = [];
 
-        var ALL_FEE_ITEMS = [];
+        let ALL_FEE_ITEMS = [];
 
         // Track selected fee types
         let selectedFeeItems = new Set();
@@ -1311,29 +1406,29 @@ require_once('../inc/page-data.php');
                 <select name="feeItem" required onchange="handleFeeItemChange(this)">
                     ${createFeeItemOptions(feeItem)}
                 </select>
-                
+
                 <div class="amount-field">
-                    <input type="number" 
-                        name="memberAmount" 
-                        placeholder="Member Amount" 
-                        step="0.01" 
-                        min="0" 
+                    <input type="number"
+                        name="memberAmount"
+                        placeholder="Member Amount"
+                        step="0.01"
+                        min="0"
                         required
                         value="${memberAmount}">
                 </div>
-                
+
                 <div class="amount-field">
-                    <input type="number" 
-                        name="nonMemberAmount" 
-                        placeholder="Non-Member Amount" 
-                        step="0.01" 
-                        min="0" 
+                    <input type="number"
+                        name="nonMemberAmount"
+                        placeholder="Non-Member Amount"
+                        step="0.01"
+                        min="0"
                         required
                         value="${nonMemberAmount}">
                 </div>
-                
-                <button type="button" 
-                        class="remove-item-btn" 
+
+                <button type="button"
+                        class="remove-item-btn"
                         onclick="removeFeeStructureItem('${itemId}')">
                     <i class="fas fa-trash"></i>
                 </button>
@@ -1521,20 +1616,113 @@ require_once('../inc/page-data.php');
                 if (file.type === 'application/pdf') {
                     pdfFilename.textContent = file.name;
                     pdfFilename.classList.remove('text-danger');
+                    document.querySelector('#edit-new_file_uploaded').value = 1;
                 } else {
                     // Reset if not a PDF
                     fileInput.value = ''; // Clear the file input
                     pdfFilename.textContent = 'Invalid file type. Please select a PDF.';
                     pdfFilename.classList.add('text-danger');
+                    document.getElementById('edit-new_file_uploaded').value = 0;
                 }
             } else {
-                pdfFilename.textContent = 'No PDF file uploaded';
+                pdfFilename.textContent = 'No new PDF file uploaded';
             }
         }
 
         // Function to trigger file input when "Change File" is clicked
         document.getElementById('change-pdf-btn').addEventListener('click', function() {
             document.getElementById('edit-fee_file').click();
+        });
+
+        // Global variable to store current PDF path
+        let currentPdfPath = '';
+
+        // Function to handle editing a fee structure
+        function editFeeStructure(feeStructureData) {
+            // Populate form fields with the data
+            document.getElementById('edit-program').value = feeStructureData.program_id;
+            document.getElementById('edit-currency').value = feeStructureData.currency;
+            document.getElementById('edit-type').value = feeStructureData.type;
+            document.getElementById('edit-category').value = feeStructureData.category;
+            document.getElementById('edit-member_amount').value = feeStructureData.member_amount;
+            document.getElementById('edit-non_member_amount').value = feeStructureData.non_member_amount;
+            document.getElementById('edit-fee_structure').value = feeStructureData.id;
+
+            // Handle PDF file information
+            const pdfFilename = document.getElementById('pdf-filename');
+            const viewPdfBtn = document.getElementById('view-pdf-btn');
+
+            if (feeStructureData.file) {
+                pdfFilename.textContent = feeStructureData.file;
+                currentPdfPath = `<?php echo BASE_URL ?>/uploads/fees/${feeStructureData.file}`;
+                viewPdfBtn.style.display = 'inline-block';
+                document.getElementById('edit-file_existed').value = feeStructureData.file;
+            } else {
+                pdfFilename.textContent = 'No file uploaded';
+                viewPdfBtn.style.display = 'none';
+                currentPdfPath = '';
+                document.getElementById('edit-file_existed').value = '';
+            }
+
+            // Open the modal
+            openModal('editFeeStructureModal');
+        }
+
+        // Function to handle PDF file change
+        // function handlePdfFileChange(event) {
+        //     const file = event.target.files[0];
+        //     const pdfFilename = document.getElementById('pdf-filename');
+        //     const viewPdfBtn = document.getElementById('view-pdf-btn');
+
+        //     if (file) {
+        //         pdfFilename.textContent = file.name;
+        //         viewPdfBtn.style.display = 'none'; // Hide view button for new uploads until saved
+        //     } else {
+        //         if (currentPdfPath) {
+        //             // Revert to current PDF if cancel selected
+        //             pdfFilename.textContent = currentPdfPath.split('/').pop();
+        //             viewPdfBtn.style.display = 'inline-block';
+        //         } else {
+        //             pdfFilename.textContent = 'No file uploaded';
+        //             viewPdfBtn.style.display = 'none';
+        //         }
+        //     }
+        // }
+
+        // Open PDF viewer modal
+        function openPdfViewer() {
+            if (!currentPdfPath) return;
+
+            const pdfViewerModal = document.getElementById('pdfViewerModal');
+            const pdfViewerFrame = document.getElementById('pdfViewerFrame');
+
+            // Set the iframe source to the PDF file
+            pdfViewerFrame.src = currentPdfPath;
+
+            // Show the modal
+            pdfViewerModal.style.display = 'block';
+        }
+
+        // Close PDF viewer modal
+        function closePdfViewer() {
+            const pdfViewerModal = document.getElementById('pdfViewerModal');
+            const pdfViewerFrame = document.getElementById('pdfViewerFrame');
+
+            // Clear the iframe source
+            pdfViewerFrame.src = '';
+
+            // Hide the modal
+            pdfViewerModal.style.display = 'none';
+        }
+
+        // Add event listener for the change PDF button
+        document.addEventListener('DOMContentLoaded', function() {
+            const changePdfBtn = document.getElementById('change-pdf-btn');
+            const editFeeFile = document.getElementById('edit-fee_file');
+
+            changePdfBtn.addEventListener('click', function() {
+                editFeeFile.click();
+            });
         });
 
         $(document).ready(function() {
@@ -1698,10 +1886,10 @@ require_once('../inc/page-data.php');
                     url: "../endpoint/fetch-fee-structure",
                     data: formData,
                     success: function(result) {
-                        console.log(result);
+                        console.log("result", result);
                         if (result.success) {
                             if (result.data) {
-                                setEditFormData(result.data[0]);
+                                editFeeStructure(result.data[0]);
                                 openEditFeeStructureModal();
                             } else alert("No data found");
                         } else {

@@ -881,11 +881,11 @@ require_once('../inc/page-data.php');
                                             <tr>
                                                 <td><?= $index ?></td>
                                                 <td><?= $aa["index_number"] ?></td>
-                                                <td><?= $aa["full_name"] ?></td>
+                                                <td><?= $aa["first_name"] . ($aa["middle_name"] ? " " . $aa["middle_name"] . " " : " ") . $aa["last_name"] ?></td>
                                                 <td><?= $aa["gender"] ?></td>
                                                 <td><a href="program/info.php?d=<?= $aa["program_id"] ?>"><?= $aa["program_name"] ?></a></td>
                                                 <td><a href="department/info.php?d=<?= $aa["department_id"] ?>"><?= $aa["department_name"] ?></a></td>
-                                                <td><?= $aa["class_code"] ?></td>
+                                                <td><a href="class/info.php?c=<?= $aa["class_code"] ?>"><?= $aa["class_code"] ?></a></td>
                                                 <td>
                                                     <a href="student/info.php?c=<?= $aa["index_number"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
                                                     <button id="<?= $aa["index_number"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>

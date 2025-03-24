@@ -1,41 +1,43 @@
 <?php
-session_start();
+    session_start();
 
-if (!isset($_SESSION["adminLogSuccess"]) || $_SESSION["adminLogSuccess"] == false || !isset($_SESSION["user"]) || empty($_SESSION["user"])) {
-    header("Location: login.php");
-}
-
-$isUser = false;
-if (strtolower($_SESSION["role"]) == "developers") $isUser = true;
-
-if (isset($_GET['logout']) || !$isUser) {
-    session_destroy();
-    $_SESSION = array();
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(
-            session_name(),
-            '',
-            time() - 42000,
-            $params["path"],
-            $params["domain"],
-            $params["secure"],
-            $params["httponly"]
-        );
+    if (! isset($_SESSION["adminLogSuccess"]) || $_SESSION["adminLogSuccess"] == false || ! isset($_SESSION["user"]) || empty($_SESSION["user"])) {
+        header("Location: login.php");
     }
 
-    header('Location: login.php');
-}
+    $isUser = false;
+    if (strtolower($_SESSION["role"]) == "developers") {
+        $isUser = true;
+    }
 
-$_SESSION["lastAccessed"] = time();
+    if (isset($_GET['logout']) || ! $isUser) {
+        session_destroy();
+        $_SESSION = [];
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
+            );
+        }
 
-require_once('bootstrap.php');
+        header('Location: login.php');
+    }
 
-use Src\Controller\AdminController;
+    $_SESSION["lastAccessed"] = time();
 
-require_once('inc/admin-database-con.php');
+    require_once 'bootstrap.php';
 
-$admin = new AdminController($db, $user, $pass);
+    use Src\Controller\AdminController;
+
+    require_once 'inc/admin-database-con.php';
+
+    $admin = new AdminController($db, $user, $pass);
 
 ?>
 
@@ -708,7 +710,7 @@ $admin = new AdminController($db, $user, $pass);
             border-radius: 8px;
         }
 
-        .fee-items-container {
+        .fee-structure-items-container {
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -729,7 +731,7 @@ $admin = new AdminController($db, $user, $pass);
             color: var(--accent-color);
         }
 
-        .fee-item {
+        .fee-structure-item {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 40px;
             gap: 15px;
@@ -740,12 +742,12 @@ $admin = new AdminController($db, $user, $pass);
             transition: all 0.3s ease;
         }
 
-        .fee-item:hover {
+        .fee-structure-item:hover {
             background-color: #f1f3f5;
         }
 
-        .fee-item select,
-        .fee-item input {
+        .fee-structure-item select,
+        .fee-structure-item input {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid #ddd;
@@ -753,8 +755,8 @@ $admin = new AdminController($db, $user, $pass);
             font-size: 14px;
         }
 
-        .fee-item input:focus,
-        .fee-item select:focus {
+        .fee-structure-item input:focus,
+        .fee-structure-item select:focus {
             border-color: var(--accent-color);
             outline: none;
         }
@@ -773,7 +775,7 @@ $admin = new AdminController($db, $user, $pass);
             transform: scale(1.1);
         }
 
-        .add-fee-item-btn {
+        .add-fee-structure-item-btn {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -788,7 +790,7 @@ $admin = new AdminController($db, $user, $pass);
             margin-top: 10px;
         }
 
-        .add-fee-item-btn:hover {
+        .add-fee-structure-item-btn:hover {
             background-color: var(--primary-color);
         }
 
@@ -811,7 +813,7 @@ $admin = new AdminController($db, $user, $pass);
         }
 
         @media (max-width: 768px) {
-            .fee-item {
+            .fee-structure-item {
                 grid-template-columns: 1fr;
                 gap: 10px;
             }
@@ -819,6 +821,131 @@ $admin = new AdminController($db, $user, $pass);
             .remove-item-btn {
                 justify-self: end;
             }
+        }
+
+        i.fas {
+            cursor: pointer;
+        }
+
+        .custom-tooltip {
+            --bs-tooltip-bg: var(--primary-color);
+            --bs-tooltip-color: var(--text-color);
+        }
+
+        .pdf-file-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .pdf-file-preview {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pdf-file-preview {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .existing-file-info {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        #pdf-filename {
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #change-pdf-btn {
+            margin-left: 10px;
+        }
+
+        .pdf-icon {
+            margin-right: 10px;
+            color: #dc3545;
+        }
+
+        /* PDF File Display Styling */
+        .pdf-file-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .pdf-file-name {
+            font-size: 14px;
+            color: #333;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pdf-view-icon {
+            color: #e74c3c;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .pdf-view-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* PDF Viewer Modal */
+        .pdf-viewer-modal {
+            display: none;
+            position: fixed;
+            z-index: 1100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .pdf-viewer-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            height: 90%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .pdf-viewer-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #e74c3c;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1110;
+        }
+
+        .pdf-viewer-iframe {
+            width: 100%;
+            height: calc(100% - 20px);
+            border: none;
         }
     </style>
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
@@ -829,7 +956,7 @@ $admin = new AdminController($db, $user, $pass);
 
 <body>
 
-    <?= require_once("inc/navbar.php") ?>
+    <?php echo require_once "inc/navbar.php" ?>
 
     <main class="main-content">
         <div class="header">
@@ -960,11 +1087,11 @@ $admin = new AdminController($db, $user, $pass);
                         <i class="fas fa-clock"></i>
                         <span>Open/Close Academic Year</span>
                     </button>
-                    <button class="action-btn" onclick="openAcademicYearModal()">
+                    <button class="action-btn" onclick="openAdmissionPeriodModal()">
                         <i class="fas fa-clock"></i>
                         <span>Open/Close Admission Period</span>
                     </button>
-                    <button class="action-btn" onclick="openAcademicYearModal()">
+                    <button class="action-btn" onclick="openCourseRegistrationModal()">
                         <i class="fas fa-clock"></i>
                         <span>Open/Close Course Registration</span>
                     </button>
@@ -974,113 +1101,156 @@ $admin = new AdminController($db, $user, $pass);
 
         <!-- Academic Year Modal -->
         <div class="modal" id="academicYearModal">
-            <div class="modal-content">
-                <button class="close-btn" onclick="closeModal('academicYearModal')">×</button>
-                <h2>Manage Academic Year</h2>
-                <form id="academicYearForm">
-                    <div class="form-group">
-                        <label for="academicYear">Academic Year</label>
-                        <select id="academicYear" required>
-                            <option value="">Select Academic Year</option>
-                            <option value="2024-2025">2024-2025</option>
-                            <option value="2025-2026">2025-2026</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Status</label>
-                        <div class="radio-group">
-                            <label>
-                                <input type="radio" name="yearStatus" value="open" required>
-                                Open
-                            </label>
-                            <label>
-                                <input type="radio" name="yearStatus" value="close" required>
-                                Close
-                            </label>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('academicYearModal')">×</button>
+                    <h2>Manage Academic Year</h2>
+                    <form id="academicYearForm">
+                        <div class="form-group">
+                            <label for="academicYear">Academic Year</label>
+                            <select id="academicYear" required>
+                                <option value="">Select Academic Year</option>
+                                <option value="2024-2025">2024-2025</option>
+                                <option value="2025-2026">2025-2026</option>
+                            </select>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="cancel-btn" onclick="closeModal('academicYearModal')">Cancel</button>
-                        <button type="submit" class="submit-btn">Update</button>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <div class="radio-group">
+                                <label>
+                                    <input type="radio" name="yearStatus" value="open" required>
+                                    Open
+                                </label>
+                                <label>
+                                    <input type="radio" name="yearStatus" value="close" required>
+                                    Close
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="cancel-btn" onclick="closeModal('academicYearModal')">Cancel</button>
+                            <button type="submit" class="submit-btn">Update</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
         <!-- Admission Period Modal -->
         <div class="modal" id="admissionPeriodModal">
-            <div class="modal-content">
-                <button class="close-btn" onclick="closeModal('admissionPeriodModal')">×</button>
-                <h2>Create Admission Period</h2>
-                <form id="admissionPeriodForm">
-                    <div class="form-group">
-                        <label for="periodName">Period Name</label>
-                        <input type="text" id="periodName" required placeholder="e.g., Fall 2025">
-                    </div>
-                    <div class="form-group">
-                        <label for="startDate">Start Date</label>
-                        <input type="date" id="startDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="endDate">End Date</label>
-                        <input type="date" id="endDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="admissionType">Admission Type</label>
-                        <select id="admissionType" required>
-                            <option value="">Select Type</option>
-                            <option value="undergraduate">Undergraduate</option>
-                            <option value="graduate">Graduate</option>
-                            <option value="international">International</option>
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="cancel-btn" onclick="closeModal('admissionPeriodModal')">Cancel</button>
-                        <button type="submit" class="submit-btn">Create Period</button>
-                    </div>
-                </form>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('admissionPeriodModal')">×</button>
+                    <h2>Create Admission Period</h2>
+                    <form id="admissionPeriodForm">
+                        <div class="form-group">
+                            <label for="periodName">Period Name</label>
+                            <input type="text" id="periodName" required placeholder="e.g., Fall 2025">
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" id="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date</label>
+                            <input type="date" id="endDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admissionType">Admission Type</label>
+                            <select id="admissionType" required>
+                                <option value="">Select Type</option>
+                                <option value="undergraduate">Undergraduate</option>
+                                <option value="graduate">Graduate</option>
+                                <option value="international">International</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="cancel-btn" onclick="closeModal('admissionPeriodModal')">Cancel</button>
+                            <button type="submit" class="submit-btn">Create Period</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admission Period Modal -->
+        <div class="modal" id="courseRegistrationModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('courseRegistrationModal')">×</button>
+                    <h2>Create Admission Period</h2>
+                    <form id="admissionPeriodForm">
+                        <div class="form-group">
+                            <label for="periodName">Period Name</label>
+                            <input type="text" id="periodName" required placeholder="e.g., Fall 2025">
+                        </div>
+                        <div class="form-group">
+                            <label for="startDate">Start Date</label>
+                            <input type="date" id="startDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="endDate">End Date</label>
+                            <input type="date" id="endDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="admissionType">Admission Type</label>
+                            <select id="admissionType" required>
+                                <option value="">Select Type</option>
+                                <option value="undergraduate">Undergraduate</option>
+                                <option value="graduate">Graduate</option>
+                                <option value="international">International</option>
+                            </select>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="cancel-btn" onclick="closeModal('courseRegistrationModal')">Cancel</button>
+                            <button type="submit" class="submit-btn">Create Period</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
         <!-- Reports Modal -->
         <div class="modal" id="reportsModal">
-            <div class="modal-content">
-                <button class="close-btn" onclick="closeModal('reportsModal')">×</button>
-                <h2>Generate Reports</h2>
-                <form id="reportsForm">
-                    <div class="form-group">
-                        <label for="reportType">Report Type</label>
-                        <select id="reportType" required>
-                            <option value="">Select Report Type</option>
-                            <option value="enrollment">Enrollment Statistics</option>
-                            <option value="application">Application Trends</option>
-                            <option value="financial">Financial Summary</option>
-                            <option value="graduation">Graduation Rates</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="reportPeriod">Period</label>
-                        <select id="reportPeriod" required>
-                            <option value="">Select Period</option>
-                            <option value="current">Current Academic Year</option>
-                            <option value="previous">Previous Academic Year</option>
-                            <option value="custom">Custom Range</option>
-                        </select>
-                    </div>
-                    <div class="form-group" id="customDateRange" style="display:none;">
-                        <label>Custom Date Range</label>
-                        <div>
-                            <label>Start Date</label>
-                            <input type="date" id="reportStartDate">
-                            <label>End Date</label>
-                            <input type="date" id="reportEndDate">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('reportsModal')">×</button>
+                    <h2>Generate Reports</h2>
+                    <form id="reportsForm">
+                        <div class="form-group">
+                            <label for="reportType">Report Type</label>
+                            <select id="reportType" required>
+                                <option value="">Select Report Type</option>
+                                <option value="enrollment">Enrollment Statistics</option>
+                                <option value="application">Application Trends</option>
+                                <option value="financial">Financial Summary</option>
+                                <option value="graduation">Graduation Rates</option>
+                            </select>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="cancel-btn" onclick="closeModal('reportsModal')">Cancel</button>
-                        <button type="submit" class="submit-btn">Generate Report</button>
-                    </div>
-                </form>
+                        <div class="form-group">
+                            <label for="reportPeriod">Period</label>
+                            <select id="reportPeriod" required>
+                                <option value="">Select Period</option>
+                                <option value="current">Current Academic Year</option>
+                                <option value="previous">Previous Academic Year</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="customDateRange" style="display:none;">
+                            <label>Custom Date Range</label>
+                            <div>
+                                <label>Start Date</label>
+                                <input type="date" id="reportStartDate">
+                                <label>End Date</label>
+                                <input type="date" id="reportEndDate">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="cancel-btn" onclick="closeModal('reportsModal')">Cancel</button>
+                            <button type="submit" class="submit-btn">Generate Report</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </main>
@@ -1127,6 +1297,10 @@ $admin = new AdminController($db, $user, $pass);
             openModal('admissionPeriodModal');
         }
 
+        function openCourseRegistrationModal() {
+            openModal('courseRegistrationModal');
+        }
+
         function openReportModal() {
             openModal('reportsModal');
         }
@@ -1147,6 +1321,15 @@ $admin = new AdminController($db, $user, $pass);
             const endDate = document.getElementById('endDate').value;
             showToast(`Admission Period ${periodName} created from ${startDate} to ${endDate}`);
             closeModal('admissionPeriodModal');
+        });
+
+        document.getElementById('courseRegistrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const periodName = document.getElementById('periodName').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            showToast(`Admission Period ${periodName} created from ${startDate} to ${endDate}`);
+            closeModal('courseRegistrationModal');
         });
 
         document.getElementById('reportsForm').addEventListener('submit', function(e) {

@@ -46,7 +46,7 @@ class FeeStructure
                 break;
         }
 
-        $query = "SELECT fs.`id`, fs.`fk_program_id` AS program_id, fs.`type`, fs.`category`, 
+        $query = "SELECT fs.`id`, fs.`fk_program_id` AS program_id, fs.`type`, fs.`category`, fs.`file`, 
                 fs.`name`, fs.`currency`, fs.`member_amount`, fs.`non_member_amount`, fs.`created_at`, 
                 pg.name AS program_name, pg.regular AS program_reg_available, pg.weekend AS program_wkd_available 
                 FROM `fee_structure` AS fs, `programs` AS pg 
@@ -151,24 +151,61 @@ class FeeStructure
         return array("success" => false, "message" => "Failed to add new fee structure!");
     }
 
-    public function update(array $data)
+    public function update(array $data, $file = null)
     {
         $program = $this->dm->getData("SELECT `index_code` FROM `programs` WHERE `id` = :p", [":p" => $data["program"]]);
         $fee_structure_name = $program[0]["index_code"] . " - {$data["type"]}" . " [{$data["category"]}]";
 
+        $file_name = null;
+
+        if ($file) {
+
+            $upload_dir = UPLOAD_DIR . "/fees/";
+
+            if ($file['error'] == UPLOAD_ERR_OK) {
+                // More robust file type checking - check actual file content
+                $finfo = new finfo(FILEINFO_MIME_TYPE);
+                $mime_type = $finfo->file($file['tmp_name']);
+
+                if ($mime_type !== 'application/pdf') {
+                    return array("success" => false, "message" => "The uploaded file is not a valid PDF!");
+                }
+
+                $file_name = $program[0]['index_code'] . '_' . $data["type"] . '_' . $data["category"] . '_fee.pdf';
+                $targetPath = $upload_dir . $file_name;
+
+                if (file_exists($targetPath)) {
+                    unlink($targetPath);
+                }
+
+                // Use binary safe file operations
+                if (!copy($file['tmp_name'], $targetPath)) {
+                    return array("success" => false, "message" => "Failed to upload file!");
+                }
+
+                // Set appropriate permissions
+                chmod($targetPath, 0644);
+
+                // Verify the file was written correctly
+                if (!file_exists($targetPath) || filesize($targetPath) != filesize($file['tmp_name'])) {
+                    return array("success" => false, "message" => "File upload verification failed!");
+                }
+            }
+        }
+
         $query = "UPDATE fee_structure SET 
-        `fk_program_id`=:p, `currency`=:c, `type`=:t, `category`=:c, `name`=:n, 
-        `member_amount`:m, `non_member_amount`:nm, `archived`=:ar WHERE `id` = :i";
+        `fk_program_id`=:p, `currency`=:r, `type`=:t, `category`=:c, `name`=:n, `file`=:f, 
+        `member_amount`=:ma, `non_member_amount`=:nm WHERE `id` = :i";
         $params = array(
             ":i" => $data["fee_structure"],
             ":p" => $data["program"],
-            ":t" => $data["type"],
             ":r" => $data["currency"],
+            ":t" => $data["type"],
             ":c" => $data["category"],
             ":n" => $fee_structure_name,
-            ":m" => $data["member_amount"],
-            ":nm" => $data["non_member_amount"],
-            ":ar" => 0
+            ":f" => $file_name,
+            ":ma" => $data["member_amount"],
+            ":nm" => $data["non_member_amount"]
         );
         $query_result = $this->dm->inputData($query, $params);
         if ($query_result) {
