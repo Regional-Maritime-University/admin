@@ -226,38 +226,65 @@ class FeeStructure
         return array("success" => false, "message" => "Failed to add new fee structure!");
     }
 
-    public function delete($id)
+    public function unarchive(array $structures)
     {
-        // First, get the fee structure details to find the associated file
-        $feeStructure = $this->dm->getData("SELECT * FROM fee_structure WHERE id = :id", array(":id" => $id));
-        if (empty($feeStructure)) return array("success" => false, "message" => "Fee structure not found!");
-
-        // Store the name for logging
-        $feeName = $feeStructure[0]['name'];
-
-        // Check if there's an associated file
-        if (!empty($feeStructure[0]['file'])) {
-            $filePath = UPLOAD_DIR . "/fees/" . $feeStructure[0]['file'];
-
-            // If file exists, delete it
-            if (file_exists($filePath)) {
-                if (!unlink($filePath)) {
-                    // Log file deletion failure but continue with database deletion
-                    $this->log->activity($_SESSION["user"], "ERROR", "Failed to delete file for fee structure {$feeName} (ID: {$id})");
-                }
+        $unarchived = 0;
+        foreach ($structures as $structure) {
+            $query = "UPDATE `fee_structure` SET `archived` = 0 WHERE `id` = :i";
+            $query_result = $this->dm->inputData($query, array(":i" => $structure));
+            if ($query_result) {
+                $this->log->activity($_SESSION["user"], "UPDATE", "Unarchived fee structure {$structure}");
+                $unarchived += 1;
             }
         }
+        return array(
+            "success" => true,
+            "message" => "{$unarchived} successfully unarchived!",
+            "errors" => "Failed to unarchive " . (count($structures) - $unarchived) . " fee structures"
+        );
+    }
 
-        // Delete the database record
-        $query = "DELETE FROM fee_structure WHERE id = :i";
-        $query_result = $this->dm->inputData($query, array(":i" => $id));
+    public function delete(array $structures)
+    {
+        $deleted = 0;
+        $errors = [];
+        foreach ($structures as $structure) {
+            // First, get the fee structure details to find the associated file
+            $feeStructure = $this->dm->getData("SELECT * FROM fee_structure WHERE `id` = :id", array(":id" => $structure));
+            if (empty($feeStructure)) {
+                $errors[] = "Fee structure with id {$structure} not found!";
+                continue;
+            }
 
-        if ($query_result) {
-            $this->log->activity($_SESSION["user"], "DELETE", "Deleted fee structure {$feeName} (ID: {$id})");
-            return array("success" => true, "message" => "Fee structure {$feeName} successfully deleted!");
+            // Store the name for logging
+            $feeName = $feeStructure[0]['name'];
+
+            // Check if there's an associated file
+            if (!empty($feeStructure[0]['file'])) {
+                $filePath = UPLOAD_DIR . "/fees/" . $feeStructure[0]['file'];
+
+                // If file exists, delete it
+                if (file_exists($filePath)) {
+                    if (!unlink($filePath)) {
+                        // Log file deletion failure but continue with database deletion
+                        $this->log->activity($_SESSION["user"], "ERROR", "Failed to delete file for fee structure {$feeName} (ID: {$structure})");
+                    }
+                }
+            }
+
+            // Delete the database record
+            $query = "DELETE FROM `fee_structure` WHERE `id` = :i";
+            $query_result = $this->dm->inputData($query, array(":i" => $structure));
+            if ($query_result) {
+                $this->log->activity($_SESSION["user"], "DELETE", "Deleted fee structure {$feeName} (ID: {$structure})");
+                $deleted += 1;
+            }
         }
-
-        return array("success" => false, "message" => "Failed to delete fee structure!");
+        return array(
+            "success" => true,
+            "message" => "{$deleted} successfully deleted!",
+            "errors" => "Failed to unarchive " . (count($structures) - $deleted) . " fee structures"
+        );
     }
 
     public function total(string $key = "", string $value = "", bool $archived = false)
@@ -284,8 +311,8 @@ class FeeStructure
                 $concat_stmt = "";
                 break;
         }
-        $query = "SELECT COUNT(c.`code`) AS total FROM `course` AS c, `course_category` AS cg, `department` AS d 
-        WHERE c.`fk_category` = cg.`id` AND c.`fk_department` = d.`id` AND c.`archived` = :ar $concat_stmt";
+        $query = "SELECT COUNT(fs.`id`) AS total FROM `fee_structure` AS fs, `programs` AS pg 
+                WHERE fs.`fk_program_id` = pg.`id` AND fs.`archived` = :ar $concat_stmt";
         $params = $value ? array(":v" => $value, ":ar" => $archived) : array(":ar" => $archived);
         return $this->dm->getData($query, $params);
     }

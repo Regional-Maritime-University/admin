@@ -131,7 +131,7 @@ CREATE TABLE `fee_structure_item` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `archived` TINYINT(1) DEFAULT 0,
-    FOREIGN KEY (`fk_fee_structure`) REFERENCES `fee_structure`(`id`)
+    FOREIGN KEY (`fk_fee_structure`) REFERENCES `fee_structure`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE INDEX fee_structure_item_name_idx1 ON `fee_structure_item` (`name`);
 CREATE INDEX fee_structure_item_member_amount_idx1 ON `fee_structure_item` (`member_amount`);

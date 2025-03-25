@@ -372,6 +372,60 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     }
 
     // fee structure
+    elseif ($_GET["url"] == "fetch-fee-item") {
+        if (isset($_POST["fee_item"]) && ! empty($_POST["fee_item"])) {
+            $_POST["key"]   = "id";
+            $_POST["value"] = $_POST["fee_item"];
+        } else if (isset($_POST["name"]) && ! empty($_POST["name"])) {
+            $_POST["key"]   = "name";
+            $_POST["value"] = $_POST["name"];
+        } else if (isset($_POST["value"]) && ! empty($_POST["value"])) {
+            $_POST["key"]   = "value";
+            $_POST["value"] = $_POST["value"];
+        } else {
+            $_POST["key"]   = "";
+            $_POST["value"] = "";
+        }
+        die(json_encode(["success" => true, "data" => $fee_item->fetch($_POST["key"], $_POST["value"])]));
+    } elseif ($_GET["url"] == "add-fee-item") {
+        if (! isset($_POST["name"]) || empty($_POST["name"])) {
+            die(json_encode(["success" => false, "message" => "Fee item name is required!"]));
+        }
+        if (! isset($_POST["value"]) || empty($_POST["value"])) {
+            die(json_encode(["success" => false, "message" => "Fee item value is required!"]));
+        }
+        die(json_encode($fee_item->add($_POST)));
+    } elseif ($_GET["url"] == "update-fee-item") {
+        if (! isset($_POST["fee_item"]) || empty($_POST["fee_item"])) {
+            die(json_encode(["success" => false, "message" => "Fee item is required!"]));
+        }
+        if (! isset($_POST["name"]) || empty($_POST["name"])) {
+            die(json_encode(["success" => false, "message" => "Fee item name is required!"]));
+        }
+        if (! isset($_POST["value"]) || empty($_POST["value"])) {
+            die(json_encode(["success" => false, "message" => "Fee item value is required!"]));
+        }
+        die(json_encode($fee_item->update($_POST)));
+    } elseif ($_GET["url"] == "archive-fee-item") {
+        if (! isset($_POST["fee_item"]) || empty($_POST["fee_item"])) {
+            die(json_encode(["success" => false, "message" => "Fee item is required!"]));
+        }
+        die(json_encode($fee_item->archive($_POST["fee_item"])));
+    } elseif ($_GET["url"] == "unarchive-fee-item") {
+        if (! isset($_POST["items"]) || empty($_POST["items"])) {
+            die(json_encode(["success" => false, "message" => "Fee items is required!"]));
+        }
+        die(json_encode($fee_item->unarchive($_POST["items"])));
+    } elseif ($_GET["url"] == "delete-fee-item") {
+        if (! isset($_POST["items"]) || empty($_POST["items"])) {
+            die(json_encode(["success" => false, "message" => "Fee item(s) required!"]));
+        }
+        die(json_encode($fee_item->delete($_POST["items"])));
+    } elseif ($_GET["url"] == "total-fee-item") {
+        die(json_encode($fee_structure->fetch($_POST["key"], $_POST["value"], $_POST["archived"])));
+    }
+
+    // fee structure
     elseif ($_GET["url"] == "fetch-fee-structure") {
         if (isset($_POST["fee_structure"]) && ! empty($_POST["fee_structure"])) {
             $_POST["key"]   = "id";
@@ -544,16 +598,21 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
             die(json_encode(["success" => false, "message" => "Fee structure is required!"]));
         }
         die(json_encode($fee_structure->archive($_POST["fee_structure"])));
-    } elseif ($_GET["url"] == "delete-fee-structure") {
-        if (! isset($_POST["fee_structure"]) || empty($_POST["fee_structure"])) {
-            die(json_encode(["success" => false, "message" => "Fee structure is required!"]));
+    } elseif ($_GET["url"] == "unarchive-fee-structure") {
+        if (! isset($_POST["fee_structures"]) || empty($_POST["fee_structures"])) {
+            die(json_encode(["success" => false, "message" => "Fee structure(s) required!"]));
         }
-        die(json_encode($fee_structure->delete($_POST["fee_structure"])));
+        die(json_encode($fee_structure->unarchive($_POST["fee_structures"])));
+    } elseif ($_GET["url"] == "delete-fee-structure") {
+        if (! isset($_POST["fee_structures"]) || empty($_POST["fee_structures"])) {
+            die(json_encode(["success" => false, "message" => "Fee structure(s) required!"]));
+        }
+        die(json_encode($fee_structure->delete($_POST["fee_structures"])));
     } elseif ($_GET["url"] == "total-fee-structure") {
         die(json_encode($fee_structure->fetch($_POST["key"], $_POST["value"], $_POST["archived"])));
     }
 
-    // Fee Items
+    // Fee Structure Items
     elseif ($_GET["url"] == "fetch-fee-structure-item") {
         if (isset($_POST["fee_item"]) && ! empty($_POST["fee_item"])) {
             $_POST["key"]   = "id";

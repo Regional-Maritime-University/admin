@@ -40,41 +40,31 @@ class FeeItem
 
     public function add(array $data)
     {
-        $errors = [];
-        $success_count = 0;
+        $selectQuery = "SELECT * FROM `fee_item` WHERE `name` = :n";
+        $feeItemData = $this->dm->getData($selectQuery, array(":n" => $data["name"]));
 
-        foreach ($data["items"] as $item) {
-            $selectQuery = "SELECT * FROM `fee_item` WHERE `id` = :n";
-            $feeStructureItemData = $this->dm->getData($selectQuery, array(":n" => $item["id"]));
-            if (!empty($feeStructureItemData)) {
-                array_push($errors, "Fee item {$feeStructureItemData[0]["name"]} already exist in database!");
+        if (!empty($feeItemData)) {
+            array_push($errors, "Fee item {$feeItemData[0]["name"]} already exist in database!");
+        } else {
+            $query = "INSERT INTO `fee_item` (`name`, `value`) VALUES(:n, :v)";
+            $params = array(":n" => $data["name"], ":v" => $data["value"]);
+            $query_result = $this->dm->inputData($query, $params);
+            if ($query_result) {
+                $this->log->activity($_SESSION["user"], "INSERT", "Added new fee item {$data["name"]}");
             } else {
-                $query = "INSERT INTO `fee_item` (`name`) VALUES(:n)";
-                $params = array(":n" => $item["name"]);
-                $query_result = $this->dm->inputData($query, $params);
-                if ($query_result) {
-                    $this->log->activity($_SESSION["user"], "INSERT", "Added new fee item {$item["name"]}");
-                    $success_count++;
-                } else {
-                    array_push($errors, "Encounter a server error while adding fee item {$item["name"]} to database!");
-                }
+                return array("success" => "Encounter a server error while adding fee item {$data["name"]} to database!");
             }
         }
-
-        return array(
-            "success" => true,
-            "message" => "{$success_count} fee items added!",
-            "errors" => $errors
-        );
+        return array("success" => true,  "message" => "fee item added!");
     }
 
     public function update(array $data)
     {
-        $query = "UPDATE fee_item SET `name`=:n `archived`=:ar WHERE `id` = :i";
+        $query = "UPDATE fee_item SET `name`=:n, `value`=:v WHERE `id` = :i";
         $params = array(
             ":i" => $data["fee_item"],
             ":n" => $data["name"],
-            ":ar" => 0
+            ":v" => $data["value"]
         );
         $query_result = $this->dm->inputData($query, $params);
         if ($query_result) {
@@ -86,23 +76,55 @@ class FeeItem
 
     public function archive($id)
     {
-        $query = "UPDATE fee_item SET archived = 1 WHERE `id` = :i";
+        $query = "UPDATE `fee_item` SET `archived` = 1 WHERE `id` = :i";
         $query_result = $this->dm->inputData($query, array(":i" => $id));
         if ($query_result) {
             $this->log->activity($_SESSION["user"], "DELETE", "Archived fee item {$id}");
-            return array("success" => true, "message" => "Fee item with id {$id} successfully archived!");
+            return array("success" => true, "message" => "Fee item successfully archived!");
         }
         return array("success" => false, "message" => "Failed to add new fee item!");
     }
 
-    public function delete($id)
+    public function unarchive(array $items)
     {
-        $query = "DELETE FROM fee_item WHERE id = :i";
-        $query_result = $this->dm->inputData($query, array(":i" => $id));
-        if ($query_result) {
-            $this->log->activity($_SESSION["user"], "DELETE", "Deleted fee item {$id}");
-            return array("success" => true, "message" => "Fee item with code {$id} successfully deleted!");
+        $unarchived = 0;
+        foreach ($items as $item) {
+            $query = "UPDATE `fee_item` SET `archived` = 0 WHERE `id` = :i";
+            $query_result = $this->dm->inputData($query, array(":i" => $item));
+            if ($query_result) {
+                $this->log->activity($_SESSION["user"], "UPDATE", "Unarchived fee item {$item}");
+                $unarchived += 1;
+            }
         }
-        return array("success" => false, "message" => "Failed to delete fee item!");
+        return array(
+            "success" => true,
+            "message" => "{$unarchived} successfully unarchived!",
+            "errors" => "Failed to unarchive " . (count($items) - $unarchived) . " items"
+        );
+    }
+
+    public function delete(array $items)
+    {
+        $deleted = 0;
+        foreach ($items as $item) {
+            $query = "DELETE FROM `fee_item` WHERE `id` = :i";
+            $query_result = $this->dm->inputData($query, array(":i" => $item));
+            if ($query_result) {
+                $this->log->activity($_SESSION["user"], "DELETE", "Deleted fee item {$item}");
+                $deleted += 1;
+            }
+        }
+        return array(
+            "success" => true,
+            "message" => "{$deleted} successfully deleted!",
+            "errors" => "Failed to delete " . (count($items) - $deleted) . " items"
+        );
+    }
+
+    public function total(bool $archived = false)
+    {
+        $query = "SELECT COUNT(*) AS total FROM `fee_item` WHERE `archived` = :ar";
+        $params = array(":ar" => $archived);
+        return $this->dm->getData($query, $params);
     }
 }

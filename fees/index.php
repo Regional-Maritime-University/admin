@@ -996,11 +996,23 @@ require_once '../inc/page-data.php';
         </div><!-- End Page Title -->
 
         <section class="mb-4 section dashboard">
-            <div style="display:flex; flex-direction: row-reverse;">
-                <button class="action-btn btn btn-success btn-sm" onclick="openAddFeeStructureModal()">
-                    <i class="fas fa-plus"></i>
-                    <span>Add</span>
-                </button>
+            <div class="row">
+                <div class="col" style="display:flex;">
+                    <a class="btn btn-light btn-xs me-2" href="items.php">
+                        <i class="fas fa-arrow-up-right-from-square"></i>
+                        <span>Fee Items</span>
+                    </a>
+                </div>
+                <div class="col" style="display:flex; flex-direction: row-reverse;">
+                    <button class="btn btn-primary btn-xs" onclick="openAddFeeStructureModal()">
+                        <i class="fas fa-plus"></i>
+                        <span>Add</span>
+                    </button>
+                    <button class="btn btn-danger btn-xs me-2" onclick="openModal('archivedFeeStructuresModal')">
+                        <i class="fas fa-archive"></i>
+                        <span>Archived</span>
+                    </button>
+                </div>
             </div>
         </section>
 
@@ -1240,6 +1252,55 @@ require_once '../inc/page-data.php';
                             <input type="hidden" name="new_file_uploaded" id="edit-new_file_uploaded" value="0">
                             <button type="button" class="btn btn-secondary" onclick="closeModal('editFeeStructureModal')">Cancel</button>
                             <button type="submit" class="btn btn-primary editFeeStructure-btn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Archived Modal -->
+        <div class="modal" id="archivedFeeStructuresModal">
+            <div class="modal-dialog modal-lg modal-scrollable">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('archivedFeeStructuresModal')">×</button>
+                    <h2>Archived Fee Structures</h2>
+                    <form id="archivedFeeStructureForm" method="POST" enctype="multipart/form-data">
+                        <table class="table table-borderless datatable table-striped table-hover">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col" style="width:150px">Name</th>
+                                    <th scope="col">Program</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $fee_structure_list = $fee_structure->fetch("", "", true);
+                                if (! empty($fee_structure_list) && is_array($fee_structure_list)) {
+                                    $index = 1;
+                                    foreach ($fee_structure_list as $fs) {
+                                ?>
+                                        <tr>
+                                            <td><?php echo $index ?></td>
+                                            <td><?php echo $fs["name"] ?></td>
+                                            <td><a href="program/info.php?d=<?php echo $fs["program_id"] ?>"><?php echo $fs["program_name"] ?></a></td>
+                                            <td>
+                                                <input type="checkbox" name="fee_structures[]" value="<?php echo $fs["id"] ?>" id="<?php echo $fs["id"] ?>" title="Check to unarchive <?= $fs["name"] ?>">
+                                            </td>
+                                        </tr>
+                                <?php
+                                        $index++;
+                                    }
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                        <div class="modal-footer">
+                            <input type="hidden" name="action" id="unarchivedFeeStructureAction" value="">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('archivedFeeStructuresModal')">Cancel</button>
+                            <button type="button" class="btn btn-danger deleteArchivedFeeStructures-btn" <?= $fee_structure_list ? '' : 'disabled' ?>>Delete</button>
+                            <button type="button" class="btn btn-primary unarchiveFeeStructures-btn" <?= $fee_structure_list ? '' : 'disabled' ?>>Unarchive</button>
                         </div>
                     </form>
                 </div>
@@ -1909,10 +1970,11 @@ require_once '../inc/page-data.php';
             });
 
             $(document).on("click", ".archive-btn", function(e) {
-                const fee_structure = $(this).attr('id');
 
                 const confirmMessage = `Are you sure you want to delete this course?`;
                 if (!confirm(confirmMessage)) return;
+
+                const fee_structure = $(this).attr('id');
 
                 const formData = {
                     "fee_structure": fee_structure
@@ -1941,6 +2003,67 @@ require_once '../inc/page-data.php';
                         alert("An error occurred while processing your request.");
                     }
                 });
+            });
+
+            $(document).on("click", ".deleteArchivedFeeStructures-btn", function(e) {
+                const confirmMessage = `Are you sure you want to delete this fee item?`;
+                if (!confirm(confirmMessage)) return;
+
+                document.getElementById("unarchivedFeeStructureAction").value = "delete";
+                submitFormViaAjax($("#archivedFeeStructureForm"), "delete");
+            });
+
+            $(document).on("click", ".unarchiveFeeStructures-btn", function(e) {
+                const confirmMessage = `Are you sure you want to unarchive this fee item?`;
+                if (!confirm(confirmMessage)) return;
+
+                document.getElementById("unarchivedFeeStructureAction").value = "unarchive";
+                submitFormViaAjax($("#archivedFeeStructureForm"), "unarchive");
+            });
+
+            function submitFormViaAjax(form, action) {
+                var form = $("#archivedFeeStructureForm");
+                var formData = new FormData(form[0]);
+
+                // Determine the correct URL based on the action
+                var url = `../endpoint/${action}-fee-structure`;
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(result) {
+                        if (result.success) {
+                            alert(result.message);
+                            closeModal("archivedFeeStructuresModal");
+
+                            // Use window.location.replace to prevent back button issues
+                            window.location.replace(window.location.pathname);
+                        } else {
+                            alert(result.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error: Internal server error!');
+                    },
+                    beforeSend: function() {
+                        $(".deleteArchivedFeeStructures-btn, .unarchiveFeeStructures-btn")
+                            .prop("disabled", true)
+                            .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...');
+                    },
+                    complete: function() {
+                        $(".deleteArchivedFeeStructures-btn, .unarchiveFeeStructures-btn").prop("disabled", false);
+                        $(".deleteArchivedFeeStructures-btn").prop("disabled", false).html('Delete');
+                        $(".unarchiveFeeStructures-btn").prop("disabled", false).html('Unarchive');
+                    }
+                });
+            }
+
+            // Prevent default form submission
+            $("#archivedFeeStructureForm").on("submit", function(e) {
+                e.preventDefault();
             });
 
         });

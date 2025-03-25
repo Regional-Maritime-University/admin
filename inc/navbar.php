@@ -40,10 +40,6 @@
                     <i class="fas fa-chalkboard"></i>
                     <span>Courses</span>
                 </a>
-                <a href="<?= url('classes/index.php') ?>" class="menu-item">
-                    <i class="fas fa-chalkboard"></i>
-                    <span>Classes</span>
-                </a>
             </div>
         </div>
         <div class="menu-group">
