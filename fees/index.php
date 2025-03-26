@@ -1601,7 +1601,6 @@ require_once '../inc/page-data.php';
                     };
                     ALL_FEE_ITEMS.push(formattedItem);
                 });
-                console.log("loaded items", ALL_FEE_ITEMS);
             } catch (error) {
                 console.error('Error loading fee structure:', error);
             }
