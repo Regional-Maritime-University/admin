@@ -720,7 +720,7 @@ require_once('../inc/page-data.php');
             border-radius: 8px;
         }
 
-        .fee-items-container {
+        .fee-structure-items-container {
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -741,7 +741,7 @@ require_once('../inc/page-data.php');
             color: var(--accent-color);
         }
 
-        .fee-item {
+        .fee-structure-item {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 40px;
             gap: 15px;
@@ -752,12 +752,12 @@ require_once('../inc/page-data.php');
             transition: all 0.3s ease;
         }
 
-        .fee-item:hover {
+        .fee-structure-item:hover {
             background-color: #f1f3f5;
         }
 
-        .fee-item select,
-        .fee-item input {
+        .fee-structure-item select,
+        .fee-structure-item input {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid #ddd;
@@ -765,8 +765,8 @@ require_once('../inc/page-data.php');
             font-size: 14px;
         }
 
-        .fee-item input:focus,
-        .fee-item select:focus {
+        .fee-structure-item input:focus,
+        .fee-structure-item select:focus {
             border-color: var(--accent-color);
             outline: none;
         }
@@ -785,7 +785,7 @@ require_once('../inc/page-data.php');
             transform: scale(1.1);
         }
 
-        .add-fee-item-btn {
+        .add-fee-structure-item-btn {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -800,7 +800,7 @@ require_once('../inc/page-data.php');
             margin-top: 10px;
         }
 
-        .add-fee-item-btn:hover {
+        .add-fee-structure-item-btn:hover {
             background-color: var(--primary-color);
         }
 
@@ -823,7 +823,7 @@ require_once('../inc/page-data.php');
         }
 
         @media (max-width: 768px) {
-            .fee-item {
+            .fee-structure-item {
                 grid-template-columns: 1fr;
                 gap: 10px;
             }
@@ -831,6 +831,131 @@ require_once('../inc/page-data.php');
             .remove-item-btn {
                 justify-self: end;
             }
+        }
+
+        i.fas {
+            cursor: pointer;
+        }
+
+        .custom-tooltip {
+            --bs-tooltip-bg: var(--primary-color);
+            --bs-tooltip-color: var(--text-color);
+        }
+
+        .pdf-file-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .pdf-file-preview {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pdf-file-preview {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .existing-file-info {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        #pdf-filename {
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #change-pdf-btn {
+            margin-left: 10px;
+        }
+
+        .pdf-icon {
+            margin-right: 10px;
+            color: #dc3545;
+        }
+
+        /* PDF File Display Styling */
+        .pdf-file-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .pdf-file-name {
+            font-size: 14px;
+            color: #333;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pdf-view-icon {
+            color: #e74c3c;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .pdf-view-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* PDF Viewer Modal */
+        .pdf-viewer-modal {
+            display: none;
+            position: fixed;
+            z-index: 1100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .pdf-viewer-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            height: 90%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .pdf-viewer-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #e74c3c;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1110;
+        }
+
+        .pdf-viewer-iframe {
+            width: 100%;
+            height: calc(100% - 20px);
+            border: none;
         }
     </style>
     <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
@@ -845,6 +970,18 @@ require_once('../inc/page-data.php');
 
     <main id="main" class="main-content">
 
+        <div class="header">
+            <button class="toggle-sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+                <button class="toggle-sidebar">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
         <div class="pagetitle">
             <h1>Programs</h1>
             <nav>
@@ -857,9 +994,13 @@ require_once('../inc/page-data.php');
 
         <section class="mb-4 section dashboard">
             <div style="display:flex; flex-direction: row-reverse;">
-                <button class="action-btn btn btn-success btn-sm" onclick="openAddProgramModal()">
+                <button class="btn btn-primary btn-sm" onclick="openAddProgramModal()">
                     <i class="fas fa-plus"></i>
                     <span>Add</span>
+                </button>
+                <button class="btn btn-danger btn-sm me-2" onclick="openModal('archivedProgramsModal')">
+                    <i class="fas fa-archive"></i>
+                    <span>Archived</span>
                 </button>
             </div>
         </section>
@@ -888,20 +1029,20 @@ require_once('../inc/page-data.php');
                                 $prog_list = $program->fetch();
                                 if (!empty($prog_list) && is_array($prog_list)) {
                                     $index = 1;
-                                    foreach ($prog_list as $aa) {
+                                    foreach ($prog_list as $pg) {
                                 ?>
                                         <tr>
                                             <td><?= $index ?></td>
-                                            <td><?= $aa["name"] ?></td>
-                                            <td><?= $aa["category"] ?></td>
-                                            <td><?= $aa["regular"] ? "YES" : "NO" ?></td>
-                                            <td><?= $aa["weekend"] ? "YES" : "NO" ?></td>
-                                            <td><?= $aa["duration"] . " " . $aa["dur_format"] ?></td>
-                                            <td><a href="department/info.php?d=<?= $aa["department_id"] ?>"><?= $aa["department_name"] ?></a></td>
+                                            <td><?= $pg["name"] ?></td>
+                                            <td><?= $pg["category"] ?></td>
+                                            <td><?= $pg["regular"] ? "YES" : "NO" ?></td>
+                                            <td><?= $pg["weekend"] ? "YES" : "NO" ?></td>
+                                            <td><?= $pg["duration"] . " " . $pg["dur_format"] ?></td>
+                                            <td><a href="department/info.php?d=<?= $pg["department_id"] ?>"><?= $pg["department_name"] ?></a></td>
                                             <td>
-                                                <a href="program/info.php?pg=<?= $aa["id"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
-                                                <button id="<?= $aa["id"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>
-                                                <button id="<?= $aa["id"] ?>" class="btn btn-danger btn-xs delete-btn">Delete</button>
+                                                <!-- <a href="program/info.php?pg=<?= $pg["id"] ?>" class="btn btn-primary btn-xs view-btn">View</a> -->
+                                                <i id="<?= $pg["id"] ?>" class="fas fa-edit text-warning edit-btn me-2" title="Edit"></i>
+                                                <i id="<?= $pg["id"] ?>" class="fas fa-archive text-danger archive-btn" title="Archive"></i>
                                             </td>
                                         </tr>
                                 <?php
@@ -999,12 +1140,12 @@ require_once('../inc/page-data.php');
                         </div>
                         <div class="input-group">
                             <div class="form-group me-2" style="width: 32%;">
-                                <label for="code">Duration</label>
-                                <input type="number" id="code" name="code" min="1" class="form-control" required>
+                                <label for="duration">Duration</label>
+                                <input type="number" id="duration" name="duration" min="1" class="form-control" required>
                             </div>
                             <div class="form-group me-2" style="width: 32%;">
-                                <label for="format">Format</label>
-                                <select id="format" name="format" required>
+                                <label for="dur_format">Format</label>
+                                <select id="dur_format" name="dur_format" required>
                                     <option value="" hidden>Select</option>
                                     <option value="semester">semester</option>
                                     <option value="year">year</option>
@@ -1013,13 +1154,13 @@ require_once('../inc/page-data.php');
                                 </select>
                             </div>
                             <div class="form-group" style="width: 32%;">
-                                <label for="num_semesters">No. of Semesters</label>
-                                <input type="number" id="num_semesters" min="0" name="num_semesters" value="0" required>
+                                <label for="num_of_semesters">No. of Semesters</label>
+                                <input type="number" id="num_of_semesters" min="0" name="num_of_semesters" value="0" required>
                             </div>
                         </div>
                         <div class="mb-4">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="regular_available">
+                                <input class="form-check-input" name="regular" type="checkbox" id="regular_available">
                                 <label class="form-check-label" for="regular_available">
                                     Is this program available for regular?
                                 </label>
@@ -1027,11 +1168,15 @@ require_once('../inc/page-data.php');
                         </div>
                         <div class="mb-4">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="weekend_available">
+                                <input class="form-check-input" name="weekend" type="checkbox" id="weekend_available">
                                 <label class="form-check-label" for="weekend_available">
                                     Is this program available for weekend?
                                 </label>
                             </div>
+                        </div>
+                        <div class="form-group" style="width: 32%;">
+                            <label for="regulation">Regulation</label>
+                            <input type="text" id="regulation" name="regulation" class="form-control">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" onclick="closeModal('addCourseModal')">Cancel</button>
@@ -1049,62 +1194,50 @@ require_once('../inc/page-data.php');
                     <button class="close-btn" onclick="closeModal('editProgramModal')">×</button>
                     <h2>Edit Program</h2>
                     <form id="editProgramForm" method="POST" enctype="multipart/form-data">
-                        <div class="input-group">
-                            <div class="form-group me-2" style="width: 20%;">
-                                <label for="edit-code">Code</label>
-                                <input type="text" id="edit-code" name="code" class="form-control" required>
-                            </div>
-                            <div class="form-group" style="width: 78%;">
-                                <label for="edit-name">Name</label>
-                                <input type="text" id="edit-name" name="name" required>
-                            </div>
+                        <div class="form-group">
+                            <label for="edit-name">Name</label>
+                            <input type="text" id="edit-name" name="edit-name" class="form-control" required>
+
                         </div>
                         <div class="input-group">
-                            <div class="form-group me-2">
-                                <label for="edit-creditHours">Credit Hours</label>
-                                <input type="number" name="creditHours" min="2" id="edit-creditHours" value="2" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="edit-contactHours">Contact Hours</label>
-                                <input type="number" name="contactHours" min="2" id="edit-contactHours" value="2" required>
-                            </div>
-                        </div>
-                        <div class="input-group">
-                            <div class="form-group me-2">
-                                <label for="edit-semester">Semester</label>
-                                <select id="edit-semester" name="semester" required>
-                                    <option value="">Select</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                </select>
-                            </div>
-                            <div class="form-group me-2">
-                                <label for="edit-level">Level</label>
-                                <select id="edit-level" name="level" required>
-                                    <option value="">Select</option>
-                                    <option value="100">100</option>
-                                    <option value="200">200</option>
-                                    <option value="300">300</option>
-                                    <option value="400">400</option>
-                                </select>
-                            </div>
                             <div class="form-group me-2">
                                 <label for="edit-category">Category</label>
-                                <select id="edit-category" name="category" required>
+                                <select id="edit-category" name="edit-category" required>
                                     <option value="" hidden>Select</option>
-                                    <?php
-                                    $program_categories = $base->fetchAllCourseCategories();
-                                    foreach ($program_categories as $program_category) {
-                                    ?>
-                                        <option value="<?= $program_category["id"] ?>"><?= $course_category["name"] ?></option>
-                                    <?php
-                                    }
-                                    ?>
+                                    <option value="DEGREE">Degree</option>
+                                    <option value="DIPLOMA">Diploma</option>
+                                    <option value="MASTERS">Masters</option>
+                                    <option value="SHORT">Vocational/Professional</option>
+                                    <option value="UPGRADE">Upgrade</option>
                                 </select>
                             </div>
-                            <div class="form-group">
-                                <label for="edit-department">Department</label>
-                                <select id="edit-department" name="department" required>
+                            <div class="form-group me-2">
+                                <label for="edit-code">Code</label>
+                                <select id="edit-code" name="edit-code" required>
+                                    <option value="" hidden>Select</option>
+                                    <option value="BSC">BSc</option>
+                                    <option value="DIPLOMA">Diploma</option>
+                                    <option value="MSC">MSc</option>
+                                    <option value="MA">MA</option>
+                                    <option value="SHORT">Short</option>
+                                    <option value="UPGRADE">Upgrade</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="width: 25%;">
+                                <label for="edit-group">Group</label>
+                                <select id="edit-group" name="edit-group" required>
+                                    <option value="" hidden>Select</option>
+                                    <option value="M">Masters based</option>
+                                    <option value="A">Science based</option>
+                                    <option value="B">None Science based</option>
+                                    <option value="N">Nothing Applicable</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="form-group me-2" style="width: 32%;">
+                                <label for="edit-faculty">Faculty</label>
+                                <select id="edit-faculty" name="edit-faculty" required>
                                     <option value="" hidden>Select</option>
                                     <?php
                                     $departments = $base->fetchAllDepartments();
@@ -1116,10 +1249,117 @@ require_once('../inc/page-data.php');
                                     ?>
                                 </select>
                             </div>
+                            <div class="form-group me-2" style="width: 32%;">
+                                <label for="edit-department">Department</label>
+                                <select id="edit-department" name="edit-department" required>
+                                    <option value="" hidden>Select</option>
+                                    <?php
+                                    $departments = $base->fetchAllDepartments();
+                                    foreach ($departments as $department) {
+                                    ?>
+                                        <option value="<?= $department["id"] ?>"><?= $department["name"] ?></option>
+                                    <?php
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                            <div class="form-group" style="width: 32%;">
+                                <label for="edit-index_code">Index Code</label>
+                                <input type="text" id="edit-index_code" name="edit-index_code" minlength="3" maxlength="3" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <div class="form-group me-2" style="width: 32%;">
+                                <label for="edit-duration">Duration</label>
+                                <input type="number" id="edit-duration" name="edit-duration" min="1" class="form-control" required>
+                            </div>
+                            <div class="form-group me-2" style="width: 32%;">
+                                <label for="edit-dur_format">Format</label>
+                                <select id="edit-dur_format" name="edit-dur_format" required>
+                                    <option value="" hidden>Select</option>
+                                    <option value="semester">semester</option>
+                                    <option value="year">year</option>
+                                    <option value="month">month</option>
+                                    <option value="week">week</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="width: 32%;">
+                                <label for="edit-num_of_semesters">No. of Semesters</label>
+                                <input type="number" id="edit-num_of_semesters" min="0" name="edit-num_of_semesters" value="0" required>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" name="edit-regular" type="checkbox" id="edit-regular_available">
+                                <label class="form-check-label" for="edit-regular_available">
+                                    Is this program available for regular?
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" name="edit-weekend" type="checkbox" id="edit-weekend_available">
+                                <label class="form-check-label" for="edit-weekend_available">
+                                    Is this program available for weekend?
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" style="width: 32%;">
+                            <label for="edit-regulation">Regulation</label>
+                            <input type="text" id="edit-regulation" name="edit-regulation" class="form-control">
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" onclick="closeModal('editProgramModal')">Cancel</button>
                             <button type="submit" class="btn btn-primary editProgram-btn">Save</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add New Fee Structure Modal -->
+        <div class="modal" id="archivedProgramsModal">
+            <div class="modal-dialog modal-lg modal-scrollable">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('archivedProgramsModal')">×</button>
+                    <h2>Archived Fee Items</h2>
+                    <form id="archivedProgramsForm" method="POST" enctype="multipart/form-data">
+                        <table class="table table-borderless datatable table-striped table-hover">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col" style="width:150px">Name</th>
+                                    <th scope="col">duration</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $prog_list = $program->fetch("", "", true);
+                                if (!empty($prog_list) && is_array($prog_list)) {
+                                    $index = 1;
+                                    foreach ($prog_list as $pg) {
+                                ?>
+                                        <tr>
+                                            <td><?= $index ?></td>
+                                            <td><?= $pg["name"] ?></td>
+                                            <td><?= $pg["duration"] . " " . $pg["dur_format"] ?></td>
+                                            <td>
+                                                <input type="checkbox" name="programs[]" value="<?php echo $pg["id"] ?>" id="<?php echo $pg["id"] ?>" title="Check to unarchive <?= $pg["name"] ?>">
+                                            </td>
+                                        </tr>
+                                <?php
+                                        $index++;
+                                    }
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                        <div class="modal-footer">
+                            <input type="hidden" name="atcion" id="unarchivedProgramAction" value="">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('archivedProgramsModal')">Cancel</button>
+                            <button type="button" class="btn btn-danger deleteArchivedPrograms-btn" <?= $prog_list ? '' : 'disabled' ?>>Delete</button>
+                            <button type="button" class="btn btn-primary unarchivePrograms-btn" <?= $prog_list ? '' : 'disabled' ?>>Unarchive</button>
                         </div>
                     </form>
                 </div>
@@ -1155,17 +1395,26 @@ require_once('../inc/page-data.php');
         }
 
         function setEditProgramFormData(data) {
+            $("#edit-id").val(data.id);
             $("#edit-code").val(data.code);
-            $("#edit-name").val(data.name);
-            $("#edit-creditHours").val(data.credit_hours);
-            $("#edit-contactHours").val(data.contact_hours);
-            $("#edit-semester").val(data.semester);
-            $("#edit-level").val(data.level);
-            $("#edit-category").val(data.category_id);
+            $("#edit-category").val(data.category);
             $("#edit-department").val(data.department_id);
+            $("#edit-dur_format").val(data.dur_format);
+            $("#edit-duration").val(data.duration);
+            $("#edit-faculty").val(data.department_id);
+            $("#edit-group").val(data.group);
+            $("#edit-index_code").val(data.index_code);
+            $("#edit-merit").val(data.merit);
+            $("#edit-name").val(data.name);
+            $("#edit-num_of_semesters").val(data.num_of_semesters);
+            $("#edit-regular_available").prop('checked', data.regular);
+            $("#edit-weekend_available").prop('checked', data.weekend);
+            $("#edit-regulation").val(data.regulation);
+            openEditProgramModal();
         }
 
         $(document).ready(function() {
+
             $("#addProgramForm").on("submit", function(e) {
 
                 e.preventDefault();
@@ -1235,10 +1484,10 @@ require_once('../inc/page-data.php');
             });
 
             $(document).on("click", ".edit-btn", function(e) {
-                const code = $(this).attr('id');
+                const program = $(this).attr('id');
 
                 const formData = {
-                    "code": code
+                    program: program
                 };
 
                 $.ajax({
@@ -1250,7 +1499,6 @@ require_once('../inc/page-data.php');
                         if (result.success) {
                             if (result.data) {
                                 setEditProgramFormData(result.data[0]);
-                                openEditProgramModal();
                             } else alert("No data found");
                         } else {
                             if (result.message == "logout") {
@@ -1268,19 +1516,19 @@ require_once('../inc/page-data.php');
                 });
             });
 
-            $(document).on("click", ".delete-btn", function(e) {
-                const code = $(this).attr('id');
+            $(document).on("click", ".archive-btn", function(e) {
+                const program = $(this).attr('id');
 
-                const confirmMessage = `Are you sure you want to delete this program?`;
+                const confirmMessage = `Are you sure you want to archive this program?`;
                 if (!confirm(confirmMessage)) return;
 
                 const formData = {
-                    "code": code
+                    program: program
                 };
 
                 $.ajax({
                     type: "POST",
-                    url: "../endpoint/delete-program",
+                    url: "../endpoint/archive-program",
                     data: formData,
                     success: function(result) {
                         console.log(result);
@@ -1301,6 +1549,67 @@ require_once('../inc/page-data.php');
                         alert("An error occurred while processing your request.");
                     }
                 });
+            });
+
+            $(document).on("click", ".deleteArchivedPrograms-btn", function(e) {
+                const confirmMessage = `Are you sure you want to delete this fee item?`;
+                if (!confirm(confirmMessage)) return;
+
+                document.getElementById("unarchivedProgramAction").value = "delete";
+                submitFormViaAjax($("#archivedProgramsForm"), "delete");
+            });
+
+            $(document).on("click", ".unarchivePrograms-btn", function(e) {
+                const confirmMessage = `Are you sure you want to unarchive this fee item?`;
+                if (!confirm(confirmMessage)) return;
+
+                document.getElementById("unarchivedProgramAction").value = "unarchive";
+                submitFormViaAjax($("#archivedProgramsForm"), "unarchive");
+            });
+
+            function submitFormViaAjax(form, action) {
+                var form = $("#archivedProgramsForm");
+                var formData = new FormData(form[0]);
+
+                // Determine the correct URL based on the action
+                var url = `../endpoint/${action}-program`;
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(result) {
+                        if (result.success) {
+                            alert(result.message);
+                            closeModal("archivedProgramsModal");
+
+                            // Use window.location.replace to prevent back button issues
+                            window.location.replace(window.location.pathname);
+                        } else {
+                            alert(result.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error: Internal server error!');
+                    },
+                    beforeSend: function() {
+                        $(".deleteArchivedPrograms-btn, .unarchivePrograms-btn")
+                            .prop("disabled", true)
+                            .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...');
+                    },
+                    complete: function() {
+                        $(".deleteArchivedPrograms-btn, .unarchivePrograms-btn").prop("disabled", false);
+                        $(".deleteArchivedPrograms-btn").prop("disabled", false).html('Delete');
+                        $(".unarchivePrograms-btn").prop("disabled", false).html('Unarchive');
+                    }
+                });
+            }
+
+            // Prevent default form submission
+            $("#archivedProgramsForm").on("submit", function(e) {
+                e.preventDefault();
             });
         });
     </script>

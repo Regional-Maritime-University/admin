@@ -998,17 +998,17 @@ require_once '../inc/page-data.php';
         <section class="mb-4 section dashboard">
             <div class="row">
                 <div class="col" style="display:flex;">
-                    <a class="btn btn-light btn-xs me-2" href="items.php">
+                    <a class="btn btn-light btn-sm me-2" href="items.php" style="border-bottom: 2px solid #003262;">
                         <i class="fas fa-arrow-up-right-from-square"></i>
                         <span>Fee Items</span>
                     </a>
                 </div>
                 <div class="col" style="display:flex; flex-direction: row-reverse;">
-                    <button class="btn btn-primary btn-xs" onclick="openAddFeeStructureModal()">
+                    <button class="btn btn-primary btn-sm" onclick="openAddFeeStructureModal()">
                         <i class="fas fa-plus"></i>
                         <span>Add</span>
                     </button>
-                    <button class="btn btn-danger btn-xs me-2" onclick="openModal('archivedFeeStructuresModal')">
+                    <button class="btn btn-danger btn-sm me-2" onclick="openModal('archivedFeeStructuresModal')">
                         <i class="fas fa-archive"></i>
                         <span>Archived</span>
                     </button>

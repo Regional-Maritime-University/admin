@@ -723,7 +723,7 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
             border-radius: 8px;
         }
 
-        .fee-items-container {
+        .fee-structure-items-container {
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -744,7 +744,7 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
             color: var(--accent-color);
         }
 
-        .fee-item {
+        .fee-structure-item {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 40px;
             gap: 15px;
@@ -755,12 +755,12 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
             transition: all 0.3s ease;
         }
 
-        .fee-item:hover {
+        .fee-structure-item:hover {
             background-color: #f1f3f5;
         }
 
-        .fee-item select,
-        .fee-item input {
+        .fee-structure-item select,
+        .fee-structure-item input {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid #ddd;
@@ -768,8 +768,8 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
             font-size: 14px;
         }
 
-        .fee-item input:focus,
-        .fee-item select:focus {
+        .fee-structure-item input:focus,
+        .fee-structure-item select:focus {
             border-color: var(--accent-color);
             outline: none;
         }
@@ -788,7 +788,7 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
             transform: scale(1.1);
         }
 
-        .add-fee-item-btn {
+        .add-fee-structure-item-btn {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -803,7 +803,7 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
             margin-top: 10px;
         }
 
-        .add-fee-item-btn:hover {
+        .add-fee-structure-item-btn:hover {
             background-color: var(--primary-color);
         }
 
@@ -826,7 +826,7 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
         }
 
         @media (max-width: 768px) {
-            .fee-item {
+            .fee-structure-item {
                 grid-template-columns: 1fr;
                 gap: 10px;
             }
@@ -834,6 +834,131 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
             .remove-item-btn {
                 justify-self: end;
             }
+        }
+
+        i.fas {
+            cursor: pointer;
+        }
+
+        .custom-tooltip {
+            --bs-tooltip-bg: var(--primary-color);
+            --bs-tooltip-color: var(--text-color);
+        }
+
+        .pdf-file-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .pdf-file-preview {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pdf-file-preview {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .existing-file-info {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        #pdf-filename {
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #change-pdf-btn {
+            margin-left: 10px;
+        }
+
+        .pdf-icon {
+            margin-right: 10px;
+            color: #dc3545;
+        }
+
+        /* PDF File Display Styling */
+        .pdf-file-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .pdf-file-name {
+            font-size: 14px;
+            color: #333;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pdf-view-icon {
+            color: #e74c3c;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .pdf-view-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* PDF Viewer Modal */
+        .pdf-viewer-modal {
+            display: none;
+            position: fixed;
+            z-index: 1100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .pdf-viewer-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            height: 90%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .pdf-viewer-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #e74c3c;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1110;
+        }
+
+        .pdf-viewer-iframe {
+            width: 100%;
+            height: calc(100% - 20px);
+            border: none;
         }
     </style>
     <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
@@ -848,6 +973,18 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
 
     <main id="main" class="main-content">
 
+        <div class="header">
+            <button class="toggle-sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+                <button class="toggle-sidebar">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
         <div class="pagetitle">
             <h1>Courses</h1>
             <nav>
@@ -860,13 +997,17 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
 
         <section class="mb-4 section dashboard">
             <div style="display:flex; flex-direction: row-reverse;">
-                <button class="action-btn btn btn-success btn-sm" onclick="openAddCourseModal()">
+                <button class="btn btn-primary btn-sm" onclick="openAddCourseModal()">
                     <i class="fas fa-plus"></i>
                     <span>Add</span>
                 </button>
-                <button class="action-btn btn btn-success btn-sm me-2" onclick="openUploadCourseModal()">
+                <button class="btn btn-primary btn-sm me-2" onclick="openUploadCourseModal()">
                     <i class="fas fa-upload"></i>
                     <span>Upload</span>
+                </button>
+                <button class="btn btn-danger btn-sm me-2" onclick="openModal('archivedCoursesModal')">
+                    <i class="fas fa-archive"></i>
+                    <span>Archived</span>
                 </button>
             </div>
         </section>
@@ -906,9 +1047,9 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
                                             <td><?= $aa["level"] ?></td>
                                             <td><a href="departments/info.php?d=<?= $aa["department_id"] ?>"><?= $aa["department_name"] ?></a></td>
                                             <td>
-                                                <a href="courses/info.php?c=<?= $aa["code"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
-                                                <button id="<?= $aa["code"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>
-                                                <button id="<?= $aa["code"] ?>" class="btn btn-danger btn-xs delete-btn">Delete</button>
+                                                <!-- <a href="courses/info.php?c=<?= $aa["code"] ?>" class="btn btn-primary btn-xs view-btn">View</a> -->
+                                                <i id="<?= $aa["code"] ?>" class="fas fa-edit text-warning edit-btn me-2" title="Edit"></i>
+                                                <i id="<?= $aa["code"] ?>" class="fas fa-archive text-danger archive-btn" title="Archive"></i>
                                             </td>
                                         </tr>
                                 <?php
@@ -1111,6 +1252,57 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
             </div>
         </div>
 
+        <!-- Add New Fee Structure Modal -->
+        <div class="modal" id="archivedCoursesModal">
+            <div class="modal-dialog modal-lg modal-scrollable">
+                <div class="modal-content">
+                    <button class="close-btn" onclick="closeModal('archivedCoursesModal')">×</button>
+                    <h2>Archived Fee Items</h2>
+                    <form id="archivedCoursesForm" method="POST" enctype="multipart/form-data">
+                        <table class="table table-borderless datatable table-striped table-hover">
+                            <thead class="table-secondary">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Code</th>
+                                    <th scope="col" style="width:150px">Name</th>
+                                    <th scope="col">Credit</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $course_list = $course->fetch("", "", true);
+                                if (!empty($course_list) && is_array($course_list)) {
+                                    $index = 1;
+                                    foreach ($course_list as $c) {
+                                ?>
+                                        <tr>
+                                            <td><?= $index ?></td>
+                                            <td><?= $c["code"] ?></td>
+                                            <td><?= $c["name"] ?></td>
+                                            <td><?= $c["credit_hours"] ?></td>
+                                            <td>
+                                                <input type="checkbox" name="courses[]" value="<?php echo $c["code"] ?>" id="<?php echo $c["code"] ?>" title="Check to unarchive <?= $c["name"] ?>">
+                                            </td>
+                                        </tr>
+                                <?php
+                                        $index++;
+                                    }
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                        <div class="modal-footer">
+                            <input type="hidden" name="atcion" id="unarchivedCourseAction" value="">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('archivedCoursesModal')">Cancel</button>
+                            <button type="button" class="btn btn-danger deleteArchivedCourses-btn" <?= $course_list ? '' : 'disabled' ?>>Delete</button>
+                            <button type="button" class="btn btn-primary unarchiveCourses-btn" <?= $course_list ? '' : 'disabled' ?>>Unarchive</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </main><!-- End #main -->
 
     <?= require_once("../inc/footer-section.php") ?>
@@ -1305,19 +1497,20 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
                 });
             });
 
-            $(document).on("click", ".delete-btn", function(e) {
-                const code = $(this).attr('id');
+            $(document).on("click", ".archive-btn", function(e) {
 
                 const confirmMessage = `Are you sure you want to delete this course?`;
                 if (!confirm(confirmMessage)) return;
 
+                const code = $(this).attr('id');
+
                 const formData = {
-                    "code": code
+                    code: code
                 };
 
                 $.ajax({
                     type: "POST",
-                    url: "../endpoint/delete-course",
+                    url: "../endpoint/archive-course",
                     data: formData,
                     success: function(result) {
                         console.log(result);
@@ -1338,6 +1531,67 @@ $declined = $admin->getshortlistedApplicationsCountByStatus('declined')[0]["tota
                         alert("An error occurred while processing your request.");
                     }
                 });
+            });
+
+            $(document).on("click", ".deleteArchivedCourses-btn", function(e) {
+                const confirmMessage = `Are you sure you want to delete this fee item?`;
+                if (!confirm(confirmMessage)) return;
+
+                document.getElementById("unarchivedCourseAction").value = "delete";
+                submitFormViaAjax($("#archivedCoursesForm"), "delete");
+            });
+
+            $(document).on("click", ".unarchiveCourses-btn", function(e) {
+                const confirmMessage = `Are you sure you want to unarchive this fee item?`;
+                if (!confirm(confirmMessage)) return;
+
+                document.getElementById("unarchivedCourseAction").value = "unarchive";
+                submitFormViaAjax($("#archivedCoursesForm"), "unarchive");
+            });
+
+            function submitFormViaAjax(form, action) {
+                var form = $("#archivedCoursesForm");
+                var formData = new FormData(form[0]);
+
+                // Determine the correct URL based on the action
+                var url = `../endpoint/${action}-course`;
+
+                $.ajax({
+                    type: 'POST',
+                    url: url,
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(result) {
+                        if (result.success) {
+                            alert(result.message);
+                            closeModal("archivedCoursesModal");
+
+                            // Use window.location.replace to prevent back button issues
+                            window.location.replace(window.location.pathname);
+                        } else {
+                            alert(result.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Error: Internal server error!');
+                    },
+                    beforeSend: function() {
+                        $(".deleteArchivedCourses-btn, .unarchiveCourses-btn")
+                            .prop("disabled", true)
+                            .html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...');
+                    },
+                    complete: function() {
+                        $(".deleteArchivedCourses-btn, .unarchiveCourses-btn").prop("disabled", false);
+                        $(".deleteArchivedCourses-btn").prop("disabled", false).html('Delete');
+                        $(".unarchiveCourses-btn").prop("disabled", false).html('Unarchive');
+                    }
+                });
+            }
+
+            // Prevent default form submission
+            $("#archivedCoursesForm").on("submit", function(e) {
+                e.preventDefault();
             });
 
             function flashMessage(bg_color, message) {

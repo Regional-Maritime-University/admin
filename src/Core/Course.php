@@ -118,15 +118,40 @@ class Course
         return array("success" => false, "message" => "Failed to archive new course!");
     }
 
-    public function delete($code)
+    public function unarchive(array $courses)
     {
-        $query = "DELETE FROM course WHERE code = :c";
-        $query_result = $this->dm->inputData($query, array(":c" => $code));
-        if ($query_result) {
-            $this->log->activity($_SESSION["user"], "DELETE", "Deeleted course {$code}");
-            return array("success" => true, "message" => "Course with code {$code} successfully deleted!");
+        $unarchived = 0;
+        foreach ($courses as $course) {
+            $query = "UPDATE `course` SET `archived` = 0 WHERE `code` = :c";
+            $query_result = $this->dm->inputData($query, array(":c" => $course));
+            if ($query_result) {
+                $this->log->activity($_SESSION["user"], "UPDATE", "Unarchived course {$course}");
+                $unarchived += 1;
+            }
         }
-        return array("success" => false, "message" => "Failed to delete course!");
+        return array(
+            "success" => true,
+            "message" => "{$unarchived} successfully unarchived!",
+            "errors" => "Failed to unarchive " . (count($courses) - $unarchived) . " courses"
+        );
+    }
+
+    public function delete(array $courses)
+    {
+        $deleted = 0;
+        foreach ($courses as $course) {
+            $query = "DELETE FROM course WHERE code = :c";
+            $query_result = $this->dm->inputData($query, array(":c" => $course));
+            if ($query_result) {
+                $this->log->activity($_SESSION["user"], "DELETE", "Deleted course {$course}");
+                $deleted += 1;
+            }
+        }
+        return array(
+            "success" => true,
+            "message" => "{$deleted} successfully deleted!",
+            "errors" => "Failed to delete " . (count($courses) - $deleted) . " courses"
+        );
     }
 
     public function total(string $key = "", string $value = "", bool $archived = false)

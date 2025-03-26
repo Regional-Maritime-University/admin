@@ -1,0 +1,12 @@
+Warning: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'id' in 'where clause'
+Trace: #0 C:\xampp\htdocs\rmu\admin\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\rmu\admin\src\System\DatabaseMethods.php(119): Src\System\DatabaseMethods->query('UPDATE `course`...', Array)
+#2 C:\xampp\htdocs\rmu\admin\src\Core\Course.php(126): Src\System\DatabaseMethods->inputData('UPDATE `course`...', Array)
+#3 C:\xampp\htdocs\rmu\admin\endpoint\index.php(363): Src\Core\Course->unarchive(Array)
+#4 {main}
+Warning: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'id' in 'where clause'
+Trace: #0 C:\xampp\htdocs\rmu\admin\src\System\DatabaseMethods.php(70): PDOStatement->execute(Array)
+#1 C:\xampp\htdocs\rmu\admin\src\System\DatabaseMethods.php(119): Src\System\DatabaseMethods->query('UPDATE `course`...', Array)
+#2 C:\xampp\htdocs\rmu\admin\src\Core\Course.php(126): Src\System\DatabaseMethods->inputData('UPDATE `course`...', Array)
+#3 C:\xampp\htdocs\rmu\admin\endpoint\index.php(363): Src\Core\Course->unarchive(Array)
+#4 {main}

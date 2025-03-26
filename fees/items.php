@@ -999,11 +999,11 @@ require_once '../inc/page-data.php';
         <section class="mb-4 section dashboard">
             <div class="row">
                 <div class="col" style="display:flex; flex-direction: row-reverse;">
-                    <button class="btn btn-primary btn-xs" onclick="openModal('addFeeItemModal')">
+                    <button class="btn btn-primary btn-sm" onclick="openModal('addFeeItemModal')">
                         <i class="fas fa-plus"></i>
                         <span>Add</span>
                     </button>
-                    <button class="btn btn-danger btn-xs me-2" onclick="openModal('archivedFeeItemsModal')">
+                    <button class="btn btn-danger btn-sm me-2" onclick="openModal('archivedFeeItemsModal')">
                         <i class="fas fa-archive"></i>
                         <span>Archived</span>
                     </button>

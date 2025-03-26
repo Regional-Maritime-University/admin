@@ -52,7 +52,7 @@ class FeeItem
             if ($query_result) {
                 $this->log->activity($_SESSION["user"], "INSERT", "Added new fee item {$data["name"]}");
             } else {
-                return array("success" => "Encounter a server error while adding fee item {$data["name"]} to database!");
+                return array("success" => "Encountered a server error while adding fee item {$data["name"]} to database!");
             }
         }
         return array("success" => true,  "message" => "fee item added!");

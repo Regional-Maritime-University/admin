@@ -259,17 +259,40 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
     }
 
     //programs
-
     elseif ($_GET["url"] == "fetch-program") {
-        die(json_encode($program->fetch($_POST["key"], $_POST["value"], $_POST["archived"])));
+        if (isset($_POST["program"]) && ! empty($_POST["program"])) {
+            $_POST["key"]   = "id";
+            $_POST["value"] = $_POST["program"];
+        } else if (isset($_POST["name"]) && ! empty($_POST["name"])) {
+            $_POST["key"]   = "name";
+            $_POST["value"] = $_POST["name"];
+        } else if (isset($_POST["value"]) && ! empty($_POST["value"])) {
+            $_POST["key"]   = "value";
+            $_POST["value"] = $_POST["value"];
+        } else {
+            $_POST["key"]   = "";
+            $_POST["value"] = "";
+        }
+        die(json_encode(["success" => true, "data" => $program->fetch($_POST["key"], $_POST["value"])]));
     } elseif ($_GET["url"] == "add-program") {
         die(json_encode($program->add($_POST)));
     } elseif ($_GET["url"] == "update-program") {
         die(json_encode($program->update($_POST, $_POST["program"])));
     } elseif ($_GET["url"] == "archive-program") {
+        if (! isset($_POST["program"]) || empty($_POST["program"])) {
+            die(json_encode(["success" => false, "message" => "Program is required!"]));
+        }
         die(json_encode($program->archive($_POST["program"])));
+    } elseif ($_GET["url"] == "unarchive-program") {
+        if (! isset($_POST["programs"]) || empty($_POST["programs"])) {
+            die(json_encode(["success" => false, "message" => "Program(s) required!"]));
+        }
+        die(json_encode($program->unarchive($_POST["programs"])));
     } elseif ($_GET["url"] == "delete-program") {
-        die(json_encode($program->delete($_POST["program"])));
+        if (! isset($_POST["programs"]) || empty($_POST["programs"])) {
+            die(json_encode(["success" => false, "message" => "Program(s) required!"]));
+        }
+        die(json_encode($program->delete($_POST["programs"])));
     } elseif ($_GET["url"] == "total-program") {
         die(json_encode($program->fetch($_POST["key"], $_POST["value"], $_POST["archived"])));
     }
@@ -345,12 +368,19 @@ if ($_SERVER['REQUEST_METHOD'] == "GET") {
         }
         die(json_encode($course->archive($_POST["code"])));
     }
-    //delete
-    elseif ($_GET["url"] == "delete-course") {
-        if (! isset($_POST["code"]) || empty($_POST["code"])) {
-            die(json_encode(["success" => false, "message" => "Course code is required!"]));
+    //unarchive
+    elseif ($_GET["url"] == "unarchive-course") {
+        if (! isset($_POST["courses"]) || empty($_POST["courses"])) {
+            die(json_encode(["success" => false, "message" => "Course(s) required!"]));
         }
-        die(json_encode($course->archive($_POST["code"])));
+        die(json_encode($course->unarchive($_POST["courses"])));
+    }
+    // delete
+    elseif ($_GET["url"] == "delete-course") {
+        if (! isset($_POST["courses"]) || empty($_POST["courses"])) {
+            die(json_encode(["success" => false, "message" => "Course(s) required!"]));
+        }
+        die(json_encode($course->delete($_POST["courses"])));
     }
     //total
     elseif ($_GET["url"] == "total-course") {

@@ -719,7 +719,7 @@ $staff = new Staff($db, $user, $pass);
             border-radius: 8px;
         }
 
-        .fee-items-container {
+        .fee-structure-items-container {
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -740,7 +740,7 @@ $staff = new Staff($db, $user, $pass);
             color: var(--accent-color);
         }
 
-        .fee-item {
+        .fee-structure-item {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 40px;
             gap: 15px;
@@ -751,12 +751,12 @@ $staff = new Staff($db, $user, $pass);
             transition: all 0.3s ease;
         }
 
-        .fee-item:hover {
+        .fee-structure-item:hover {
             background-color: #f1f3f5;
         }
 
-        .fee-item select,
-        .fee-item input {
+        .fee-structure-item select,
+        .fee-structure-item input {
             width: 100%;
             padding: 8px 12px;
             border: 1px solid #ddd;
@@ -764,8 +764,8 @@ $staff = new Staff($db, $user, $pass);
             font-size: 14px;
         }
 
-        .fee-item input:focus,
-        .fee-item select:focus {
+        .fee-structure-item input:focus,
+        .fee-structure-item select:focus {
             border-color: var(--accent-color);
             outline: none;
         }
@@ -784,7 +784,7 @@ $staff = new Staff($db, $user, $pass);
             transform: scale(1.1);
         }
 
-        .add-fee-item-btn {
+        .add-fee-structure-item-btn {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -799,7 +799,7 @@ $staff = new Staff($db, $user, $pass);
             margin-top: 10px;
         }
 
-        .add-fee-item-btn:hover {
+        .add-fee-structure-item-btn:hover {
             background-color: var(--primary-color);
         }
 
@@ -822,7 +822,7 @@ $staff = new Staff($db, $user, $pass);
         }
 
         @media (max-width: 768px) {
-            .fee-item {
+            .fee-structure-item {
                 grid-template-columns: 1fr;
                 gap: 10px;
             }
@@ -830,6 +830,131 @@ $staff = new Staff($db, $user, $pass);
             .remove-item-btn {
                 justify-self: end;
             }
+        }
+
+        i.fas {
+            cursor: pointer;
+        }
+
+        .custom-tooltip {
+            --bs-tooltip-bg: var(--primary-color);
+            --bs-tooltip-color: var(--text-color);
+        }
+
+        .pdf-file-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .pdf-file-preview {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pdf-file-preview {
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .existing-file-info {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        #pdf-filename {
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #change-pdf-btn {
+            margin-left: 10px;
+        }
+
+        .pdf-icon {
+            margin-right: 10px;
+            color: #dc3545;
+        }
+
+        /* PDF File Display Styling */
+        .pdf-file-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 5px;
+        }
+
+        .pdf-file-name {
+            font-size: 14px;
+            color: #333;
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .pdf-view-icon {
+            color: #e74c3c;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .pdf-view-icon:hover {
+            transform: scale(1.1);
+        }
+
+        /* PDF Viewer Modal */
+        .pdf-viewer-modal {
+            display: none;
+            position: fixed;
+            z-index: 1100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .pdf-viewer-content {
+            position: relative;
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            height: 90%;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .pdf-viewer-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #e74c3c;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1110;
+        }
+
+        .pdf-viewer-iframe {
+            width: 100%;
+            height: calc(100% - 20px);
+            border: none;
         }
     </style>
     <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
@@ -844,6 +969,18 @@ $staff = new Staff($db, $user, $pass);
 
     <main id="main" class="main-content">
 
+        <div class="header">
+            <button class="toggle-sidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="search-bar">
+                <input type="text" placeholder="Search...">
+                <button class="toggle-sidebar">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+
         <div class="pagetitle">
             <h1>Departments</h1>
             <nav>
@@ -856,9 +993,13 @@ $staff = new Staff($db, $user, $pass);
 
         <section class="mb-4 section dashboard">
             <div style="display:flex; flex-direction: row-reverse;">
-                <button class="action-btn btn btn-success btn-sm" onclick="openAddDepartmentModal()">
+                <button class="btn btn-primary btn-sm" onclick="openAddDepartmentModal()">
                     <i class="fas fa-plus"></i>
                     <span>Add</span>
+                </button>
+                <button class="btn btn-danger btn-sm me-2" onclick="openModal('archivedFeeItemsModal')">
+                    <i class="fas fa-archive"></i>
+                    <span>Archived</span>
                 </button>
             </div>
         </section>
@@ -891,9 +1032,9 @@ $staff = new Staff($db, $user, $pass);
                                                 <td><?= $aa["name"] ?></td>
                                                 <td><a href="info.php?s=<?= $aa["hod_id"] ?>"><?= $aa["hod_name"] ?></a></td>
                                                 <td>
-                                                    <a href="info.php?d=<?= $aa["id"] ?>" class="btn btn-primary btn-xs view-btn">View</a>
-                                                    <button id="<?= $aa["id"] ?>" class="btn btn-warning btn-xs edit-btn">Edit</button>
-                                                    <button id="<?= $aa["id"] ?>" class="btn btn-danger btn-xs delete-btn">Delete</button>
+                                                    <!-- <a href="info.php?d=<?= $aa["id"] ?>" class="btn btn-primary btn-xs view-btn">View</a> -->
+                                                    <i id="<?= $aa["id"] ?>" class="fas fa-edit text-warning edit-btn me-2" title="Edit"></i>
+                                                    <i id="<?= $aa["id"] ?>" class="fas fa-archive text-danger archive-btn" title="Archive"></i>
                                                 </td>
                                             </tr>
                                     <?php
